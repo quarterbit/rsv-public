@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Verkehrssimulation" aktiv="verkehrssimulation"
+  description="Mikroskopische Verkehrssimulation der geplanten RSV-Trasse durch den Tennenloher Ortskern (SUMO/OpenStreetMap) — in Arbeit.">
+
+  <section class="hero">
+    <p class="kicker">SUMO · OpenStreetMap · Morgenspitze 06:30–09:00 Uhr</p>
+    <h2>Verkehrssimulation Tennenlohe <span style="font-size:0.6em; opacity:0.7">(in Arbeit)</span></h2>
+    <p class="lead">
+      Wir simulieren die geplante RSV-Trasse durch den Ortskern — Leitensteig, Brandnerweg,
+      Sebastianstraße — mit dem wissenschaftlichen Open-Source-Simulator
+      <a href="https://eclipse.dev/sumo/" rel="noopener" target="_blank">Eclipse SUMO</a>
+      auf Basis von OpenStreetMap-Daten.
+    </p>
+  </section>
+
+  <h2>Was wird simuliert?</h2>
+  <p>
+    Die mikroskopische Simulation bildet die <strong>Morgenspitze (06:30–09:00 Uhr)</strong> ab —
+    den Zeitraum, in dem Radpendler, Grundschüler und Anwohnerverkehr gleichzeitig auf der
+    geplanten Trasse zusammentreffen:
+  </p>
+  <ul>
+    <li><strong>RSV-Radpendler</strong> auf der geplanten Trasse (mit Pedelec-Geschwindigkeiten)</li>
+    <li><strong>Grundschüler</strong> zu Fuß und mit dem Rad auf ihren Schulwegen</li>
+    <li><strong>Anwohnerverkehr</strong> — Pkw aus über 30 Grundstücksausfahrten, Elterntaxis, Einpendler</li>
+  </ul>
+
+  <h2>Warum eine Simulation?</h2>
+  <p>
+    Zahlen und Konfliktstellen-Fotos zeigen den Ist-Zustand. Die Simulation macht sichtbar,
+    was bei prognostizierten <strong>bis zu 4.800 Radfahrten pro Tag</strong> im Ortskern
+    tatsächlich passieren würde: Begegnungskonflikte an Engstellen, Querungskonflikte an
+    Schulwegen und Ausfahrten, Rückstau an Knotenpunkten.
+  </p>
+
+  <div class="hinweis">
+    <strong>Status: in Arbeit.</strong> Wir kalibrieren die Simulation derzeit mit den Ergebnissen
+    unserer <a href="/zaehlung">Bürger-Verkehrszählung</a>. Ergebnisse, Videos und die
+    vollständige Methodik werden hier veröffentlicht, sobald sie belastbar sind.
+  </div>
+
+</Base>

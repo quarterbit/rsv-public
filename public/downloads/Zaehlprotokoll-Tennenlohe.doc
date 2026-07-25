@@ -1,0 +1,118 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="windows-1252">
+<title>Zählprotokoll — Bürger-Verkehrszählung Tennenlohe</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
+<style>
+  @page { size: A4; margin: 2cm 1.5cm; }
+  body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #1e2430; }
+  h1 { font-size: 16pt; color: #14304f; }
+  h2 { font-size: 13pt; color: #14304f; margin-top: 18pt; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { border: 1pt solid #888; padding: 4pt 6pt; font-size: 10pt; vertical-align: top; }
+  th { background: #eaf0f6; color: #14304f; }
+  .label { width: 35%; background: #eaf0f6; font-weight: bold; }
+  .kopf td { height: 22pt; }
+  .strich td { height: 110pt; }
+  .strich td.iv { height: 110pt; width: 70pt; vertical-align: middle; font-size: 9pt; }
+  .summe th { height: 20pt; }
+  .seite2 { page-break-before: always; }
+  .unterschrift td { border: none; border-top: 1pt solid #000; width: 33%; font-size: 9pt; padding-top: 4pt; }
+  .unterschrift td.leer { border: none; width: 3%; }
+  .frei { border: 1pt solid #888; height: 140pt; }
+</style>
+</head>
+<body>
+
+<h1>Zählprotokoll — Bürger-Verkehrszählung Tennenlohe</h1>
+<p>Bürgerinitiative Radschnellverbindung Tennenlohe · radschnellverbindung-tennenlohe.de<br>
+Bitte vorher die Methodik-Anleitung lesen: radschnellverbindung-tennenlohe.de/zaehlung — Pro 2-Stunden-Zählung ein Protokoll.</p>
+
+<h2>1. Angaben zur Zählung (vollständig ausfüllen!)</h2>
+<table class="kopf">
+  <tr><td class="label">Datum / Wochentag</td><td></td></tr>
+  <tr><td class="label">Uhrzeit von – bis</td><td></td></tr>
+  <tr><td class="label">Zählstelle (Straße, Hausnr./Kreuzung)</td><td></td></tr>
+  <tr><td class="label">GPS-Koordinaten (optional)</td><td></td></tr>
+  <tr><td class="label">Richtung A =</td><td>z. B. „stadteinwärts / Richtung Wetterkreuz"</td></tr>
+  <tr><td class="label">Richtung B =</td><td>z. B. „stadtauswärts / Richtung Sebastianstraße"</td></tr>
+  <tr><td class="label">Wetter / Temperatur</td><td></td></tr>
+  <tr><td class="label">Schultag? (ja/nein, Ferien?)</td><td></td></tr>
+  <tr><td class="label">Besonderheiten (Baustelle, Veranstaltung …)</td><td></td></tr>
+  <tr><td class="label">Zählende Person(en), Name(n)</td><td></td></tr>
+  <tr><td class="label">Standortfoto gemacht? (ja/nein)</td><td></td></tr>
+</table>
+
+<h2>2. Zähltabelle — Radverkehr &amp; Fußverkehr</h2>
+<p>Strichliste führen. Pro Zeile ein 15-Minuten-Intervall.</p>
+<table>
+  <tr>
+    <th rowspan="2">Intervall<br>(Uhrzeit)</th>
+    <th colspan="3">Rad Richtung A</th>
+    <th colspan="3">Rad Richtung B</th>
+    <th>Fuß A</th>
+    <th>Fuß B</th>
+  </tr>
+  <tr>
+    <th>Fahrrad</th><th>Pedelec</th><th>Lastenrad</th>
+    <th>Fahrrad</th><th>Pedelec</th><th>Lastenrad</th>
+    <th></th><th></th>
+  </tr>
+  <tr class="strich"><td class="iv">__:00–__:15</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:15–__:30</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:30–__:45</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:45–__:00</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:00–__:15</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:15–__:30</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:30–__:45</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:45–__:00</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="summe"><th>Summe</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+</table>
+
+<div class="seite2"></div>
+
+<h2>3. Zähltabelle — Kfz-Verkehr (gleicher Zeitraum)</h2>
+<table>
+  <tr>
+    <th rowspan="2">Intervall<br>(Uhrzeit)</th>
+    <th colspan="3">Kfz Richtung A</th>
+    <th colspan="3">Kfz Richtung B</th>
+  </tr>
+  <tr>
+    <th>Pkw</th><th>Lkw/Bus</th><th>Landwirtsch.</th>
+    <th>Pkw</th><th>Lkw/Bus</th><th>Landwirtsch.</th>
+  </tr>
+  <tr class="strich"><td class="iv">__:00–__:15</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:15–__:30</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:30–__:45</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:45–__:00</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:00–__:15</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:15–__:30</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:30–__:45</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="strich"><td class="iv">__:45–__:00</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr class="summe"><th>Summe</th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+</table>
+
+<h2>4. Beobachtete Konflikte / besondere Vorkommnisse</h2>
+<p>Uhrzeit + kurze Beschreibung (z. B. „7:42 – Pkw überholt Radfahrer eng bei Gegenverkehr"):</p>
+<table><tr><td class="frei"></td></tr></table>
+
+<h2>5. Bestätigung</h2>
+<p>Ich bestätige / wir bestätigen, dass die Zählung persönlich, sorgfältig und wahrheitsgemäß
+nach der Anleitung der Bürgerinitiative durchgeführt und die Werte während der Zählung
+unmittelbar eingetragen wurden.</p>
+<br><br><br>
+<table class="unterschrift">
+  <tr>
+    <td>Ort, Datum</td>
+    <td class="leer"></td>
+    <td>Unterschrift Zähler*in 1</td>
+    <td class="leer"></td>
+    <td>Unterschrift Zähler*in 2 (falls vorhanden)</td>
+  </tr>
+</table>
+
+<p style="margin-top:20pt"><b>Abgabe:</b> Foto/Scan an info@radschnellverbindung-tennenlohe.de — Vielen Dank für Ihre Unterstützung!</p>
+
+</body>
+</html>
