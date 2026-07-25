@@ -1,0 +1,106 @@
+---
+import Base from '../layouts/Base.astro';
+
+const intervalle = ['__:00–__:15', '__:15–__:30', '__:30–__:45', '__:45–__:00', '__:00–__:15', '__:15–__:30', '__:30–__:45', '__:45–__:00'];
+---
+<Base title="Zählprotokoll (Druckvorlage)" aktiv=""
+  description="Standardisiertes Zählprotokoll für die Bürger-Verkehrszählung Tennenlohe — Druckvorlage nach FGSV/BASt-Methodik.">
+
+<style>
+  .kopf td { height: 2.2rem; }
+  .kopf td.label { width: 30%; background: var(--blau-hell); font-weight: 600; }
+  .zaehltab th { font-size: 0.82rem; }
+  .zaehltab td { height: 2.5rem; }
+  .unterschrift { margin-top: 2.5rem; display: flex; gap: 3rem; }
+  .unterschrift div { flex: 1; border-top: 1px solid #000; padding-top: 0.3rem; font-size: 0.85rem; }
+  .frei { border: 1px solid var(--rand); background: #fff; min-height: 6rem; padding: 0.5rem; }
+  @media print { .seite2 { page-break-before: always; } }
+</style>
+
+<p class="hinweis no-print">
+  <strong>So verwenden Sie diese Vorlage:</strong> Seite über die Druckfunktion des Browsers
+  ausdrucken (Strg+P / Cmd+P) — Navigation und Fußzeile werden automatisch ausgeblendet.
+  Bitte vorher die <a href="/zaehlung">Methodik-Anleitung</a> lesen. Pro 2-Stunden-Zählung
+  ein Protokoll.
+</p>
+
+<h2>Zählprotokoll — Bürger-Verkehrszählung Tennenlohe</h2>
+
+<h3>1. Angaben zur Zählung (vollständig ausfüllen!)</h3>
+<table class="kopf">
+  <tr><td class="label">Datum / Wochentag</td><td></td></tr>
+  <tr><td class="label">Uhrzeit von – bis</td><td></td></tr>
+  <tr><td class="label">Zählstelle (Straße, Hausnr./Kreuzung)</td><td></td></tr>
+  <tr><td class="label">GPS-Koordinaten (optional)</td><td></td></tr>
+  <tr><td class="label">Richtung A =</td><td>z. B. „stadteinwärts / Richtung Wetterkreuz"</td></tr>
+  <tr><td class="label">Richtung B =</td><td>z. B. „stadtauswärts / Richtung Sebastianstraße"</td></tr>
+  <tr><td class="label">Wetter / Temperatur</td><td></td></tr>
+  <tr><td class="label">Schultag? (ja/nein, Ferien?)</td><td></td></tr>
+  <tr><td class="label">Besonderheiten (Baustelle, Veranstaltung …)</td><td></td></tr>
+  <tr><td class="label">Zählende Person(en), Name(n)</td><td></td></tr>
+  <tr><td class="label">Standortfoto gemacht? (ja/nein)</td><td></td></tr>
+</table>
+
+<h3>2. Zähltabelle — Radverkehr &amp; Fußverkehr</h3>
+<p>Strichliste führen. Pro Zeile ein 15-Minuten-Intervall.</p>
+<table class="zaehltab">
+  <tr>
+    <th rowspan="2">Intervall<br />(Uhrzeit)</th>
+    <th colspan="3">Rad Richtung A</th>
+    <th colspan="3">Rad Richtung B</th>
+    <th>Fuß A</th>
+    <th>Fuß B</th>
+  </tr>
+  <tr>
+    <th>Fahrrad</th><th>Pedelec</th><th>Lastenrad</th>
+    <th>Fahrrad</th><th>Pedelec</th><th>Lastenrad</th>
+    <th></th><th></th>
+  </tr>
+  {intervalle.map((iv) => (
+    <tr><td>{iv}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  ))}
+  <tr><th>Summe</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+</table>
+
+<div class="seite2"></div>
+
+<h3>3. Zähltabelle — Kfz-Verkehr (gleicher Zeitraum)</h3>
+<table class="zaehltab">
+  <tr>
+    <th rowspan="2">Intervall<br />(Uhrzeit)</th>
+    <th colspan="3">Kfz Richtung A</th>
+    <th colspan="3">Kfz Richtung B</th>
+  </tr>
+  <tr>
+    <th>Pkw</th><th>Lkw/Bus</th><th>Landwirtsch.</th>
+    <th>Pkw</th><th>Lkw/Bus</th><th>Landwirtsch.</th>
+  </tr>
+  {intervalle.map((iv) => (
+    <tr><td>{iv}</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  ))}
+  <tr><th>Summe</th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+</table>
+
+<h3>4. Beobachtete Konflikte / besondere Vorkommnisse</h3>
+<p>Uhrzeit + kurze Beschreibung (z. B. „7:42 – Pkw überholt Radfahrer eng bei Gegenverkehr"):</p>
+<div class="frei"></div>
+
+<h3>5. Bestätigung</h3>
+<p>
+  Ich bestätige / wir bestätigen, dass die Zählung persönlich, sorgfältig und wahrheitsgemäß
+  nach der Anleitung der Bürgerinitiative durchgeführt und die Werte während der Zählung
+  unmittelbar eingetragen wurden.
+</p>
+<div class="unterschrift">
+  <div>Ort, Datum</div>
+  <div>Unterschrift Zähler*in 1</div>
+  <div>Unterschrift Zähler*in 2 (falls vorhanden)</div>
+</div>
+
+<p class="hinweis no-print" style="margin-top:2rem">
+  <strong>Abgabe:</strong> Foto/Scan an
+  <a href="mailto:info@radschnellverbindung-tennenlohe.de">info@radschnellverbindung-tennenlohe.de</a>
+  (Details siehe <a href="/zaehlung">Mitmach-Seite</a>). Vielen Dank für Ihre Unterstützung!
+</p>
+
+</Base>

@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  aktiv?: string;
+}
+const { title, description = 'Bürgerinitiative für eine richtlinienkonforme Radschnellverbindung — um den Ortskern Tennenlohe, nicht mitten hindurch.', aktiv = '' } = Astro.props;
+
+const nav = [
+  { href: '/', key: 'start', label: 'Start' },
+  { href: '/konfliktstellen', key: 'konfliktstellen', label: 'Konfliktstellen' },
+  { href: '/zaehlung', key: 'zaehlung', label: 'Mitmachen: Zählung' },
+  { href: '/presse', key: 'presse', label: 'Presse' },
+  { href: '/behoerden', key: 'behoerden', label: 'Behörden & Verfahren' },
+];
+---
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title} | Radschnellverbindung Tennenlohe</title>
+  <meta name="description" content={description} />
+</head>
+<body>
+  <header class="site">
+    <div class="inner">
+      <h1>Radschnellverbindung Tennenlohe</h1>
+      <p class="claim">Für die beste Trasse — nicht die bequemste. Bürgerinitiative aus Erlangen-Tennenlohe.</p>
+    </div>
+  </header>
+  <nav class="site">
+    <div class="inner">
+      {nav.map((n) => (
+        <a href={n.href} aria-current={aktiv === n.key ? 'page' : undefined}>{n.label}</a>
+      ))}
+    </div>
+  </nav>
+  <main>
+    <slot />
+  </main>
+  <footer class="site">
+    <div class="inner">
+      Bürgerinitiative Radschnellverbindung Tennenlohe ·
+      <a href="mailto:info@radschnellverbindung-tennenlohe.de">info@radschnellverbindung-tennenlohe.de</a> ·
+      Presse: <a href="/presse">Presse &amp; Medien</a> ·
+      Alle Angaben aus öffentlich zugänglichen Quellen
+      (Ratsinformationssystem der Stadt Erlangen, BMV, BASt, Destatis, UDV) ·
+      <a href="/zaehlprotokoll">Zählprotokoll</a> ·
+      <a href="/impressum">Impressum</a> ·
+      <a href="/datenschutz">Datenschutz</a>
+    </div>
+  </footer>
+</body>
+</html>

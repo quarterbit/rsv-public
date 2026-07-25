@@ -1,0 +1,14 @@
+---
+interface Props {
+  zahl: string;
+  label: string;
+  fussnote?: string;
+  signal?: boolean;
+}
+const { zahl, label, fussnote, signal = false } = Astro.props;
+---
+<div class={signal ? 'stat signal' : 'stat'}>
+  <span class="zahl">{zahl}</span>
+  <span class="label">{label}</span>
+  {fussnote && <span class="fussnote">{fussnote}</span>}
+</div>

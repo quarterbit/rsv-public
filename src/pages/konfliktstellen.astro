@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import Stat from '../components/Stat.astro';
+
+const konfliktstellen = [
+  {
+    nr: 'K1', titel: 'Eingang Spielplatz', tag: 'Kinder',
+    text: 'Kinder betreten und queren die Trasse direkt am Spielplatzeingang — unvorhersehbar und genau auf Höhe des bevorrechtigten Radverkehrs.',
+    zeit: 'Nachmittags, Wochenende, Ferien', kritisch: true,
+  },
+  {
+    nr: 'K2', titel: 'Parkplatz Gaststätte „Zum Schloss"', tag: 'Gastronomie',
+    text: 'Ein- und ausparkende Gäste, Rangierverkehr und Fußgänger zwischen Parkplatz und Eingang kreuzen die Trasse.',
+    zeit: 'Mittags- und Abendbetrieb', kritisch: false,
+  },
+  {
+    nr: 'K3', titel: 'Evangelische Kirche St. Maria Magdalena', tag: 'Gemeindeleben',
+    text: 'Gottesdienste und Gemeindeveranstaltungen: ältere Fußgänger, Querungen, Parken direkt an der Trasse (Sebastianstraße 4).',
+    zeit: 'Sonntag vormittags, Veranstaltungen', kritisch: false,
+  },
+  {
+    nr: 'K4', titel: 'Sportheim SV Tennenlohe & Gaststätte „Zur Wied"', tag: 'Sport & Gastronomie',
+    text: 'Trainings- und Spielbetrieb mit Kindern, Bring- und Parkverkehr der Gäste, Gaststättenbetrieb bis in die Abendstunden — Fußgänger in Dämmerung und Dunkelheit.',
+    zeit: 'Werktags ab ca. 17 Uhr, Wochenende, Abende', kritisch: true,
+  },
+  {
+    nr: 'K5', titel: 'Grundschule Tennenlohe (Enggleis 6)', tag: 'Schulweg',
+    text: 'Schulwege queren die Trasse — Grundschüler morgens zeitgleich mit der Radpendler-Spitze.',
+    zeit: 'Mo–Fr ca. 7:30–8:15 Uhr und mittags', kritisch: true,
+  },
+  {
+    nr: 'K6', titel: 'Ruhender Verkehr auf der gesamten Strecke', tag: 'Parkdruck',
+    text: 'Hoher Parkdruck in Leitensteig, Brandnerweg und Sebastianstraße: parkende Fahrzeuge verdecken Sicht auf Ausfahrten und Querungen; erhöhtes Risiko des Türöffnens in die Trasse („Dooring“).',
+    zeit: 'Abends und nachts am höchsten', kritisch: false,
+  },
+];
+---
+<Base title="Konfliktstellen auf der Vorzugstrasse" aktiv="konfliktstellen"
+  description="Dokumentierte Konfliktstellen der geplanten Radschnellverbindung durch den Tennenloher Ortskern: Spielplatz, Kirche, Sportheim, Grundschule und 30+ Grundstücksausfahrten.">
+
+  <section class="hero">
+    <p class="kicker">Leitensteig · Brandnerweg · Sebastianstraße</p>
+    <h2>Eine Trasse, sechs Konfliktzonen — und 30+ Ausfahrten.</h2>
+    <p class="lead">
+      Was auf dem Papier als „Vorzugstrasse" erscheint, ist vor Ort ein dichter Korridor aus
+      Schulwegen, Vereinsleben, Gastronomie, Einsatzverkehr und privaten Grundstücksausfahrten.
+      Wir dokumentieren jede Stelle — mit Foto, Lage und kritischen Zeiten.
+    </p>
+  </section>
+
+  <div class="statband">
+    <Stat zahl="30+" label="Ein- &amp; Ausfahrten von Häusern und Garagenhöfen" fussnote="vorläufig — Validierung durch Begehung läuft" signal={true} />
+    <Stat zahl="3" label="Straßen im Ortskern betroffen" />
+    <Stat zahl="1" label="Grundschule mit querenden Schulwegen" />
+    <Stat zahl="abends" label="Gaststättenbetrieb an der Trasse — Fußgänger im Dunkeln" />
+  </div>
+
+  <h2>Die Konfliktstellen im Einzelnen</h2>
+  <div class="kartengrid">
+    {konfliktstellen.map((k) => (
+      <div class={k.kritisch ? 'karte kritisch' : 'karte'}>
+        <span class="tag">{k.nr} · {k.tag}</span>
+        <h3>{k.titel}</h3>
+        <p>{k.text}</p>
+        <p class="zeit">Kritische Zeiten: {k.zeit}</p>
+      </div>
+    ))}
+  </div>
+
+  <h2>30+ private Ein- und Ausfahrten</h2>
+  <p>
+    Entlang der geplanten Trasse münden nach unserer vorläufigen Erfassung <strong>über 30 private
+    Ein- und Ausfahrten</strong> (Garagen, Höfe, Stellplätze, Gewerbe) direkt auf den künftigen
+    „Radschnellweg" — verteilt auf Leitensteig, Brandnerweg und Sebastianstraße. Jede einzelne ist
+    eine potenzielle Konfliktstelle zwischen ausparkenden Fahrzeugen und bevorrechtigtem Radverkehr
+    mit 20–30&nbsp;km/h, häufig mit durch parkende Autos eingeschränkter Sicht.
+  </p>
+  <div class="warnung">
+    <strong>Transparenzhinweis:</strong> Die Zahl „30+" ist eine vorläufige Erfassung. Eine
+    systematische Begehung mit Nummerierung (A1–A…), Fotos und Sichtfeld-Dokumentation läuft;
+    die validierte Liste wird hier veröffentlicht.
+  </div>
+
+  <h2>Zum Vergleich: Was das Regelwerk verlangt</h2>
+  <p>
+    Die „Hinweise zu Radschnellverbindungen und Radvorrangrouten" (H-RSV 2021) und die
+    Verwaltungsvereinbarung Radschnellwege des Bundes fordern <em>Konfliktarmut, Trennung der
+    Verkehrsarten und geringe Verlustzeiten</em>. Abweichungen vom Standard sind nur auf
+    <em>kurzen Streckenanteilen</em> zulässig. Eine Trasse, die auf ihrer gesamten Ortsdurchfahrt
+    aus Konfliktstellen besteht, erfüllt diese Voraussetzungen strukturell nicht.
+  </p>
+  <p>
+    <a class="button" href="/behoerden">Unsere Forderungen an Stadt &amp; Regierung →</a>
+    <a class="button signal" href="/zaehlung">Mithelfen: Verkehr zählen →</a>
+  </p>
+
+</Base>

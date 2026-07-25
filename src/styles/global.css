@@ -1,0 +1,270 @@
+/* ==========================================================================
+   Farbkonzept radschnellverbindung-tennenlohe.de
+   --------------------------------------------------------------------------
+   Primär:   Dunkles Blau  #14304F  — Header, Navigation, Überschriften, Flächen
+   Signal:   Frankenrot    #C8102E  — SPARSAM: Stat-Zahlen, Warn-Kanten,
+                                      max. ein Akzent pro Ansicht
+   Neutral:  Sand #F7F5F0 (Hintergrund), Blau-Hell #EAF0F6 (Infoflächen),
+             Text #1E2430, Weiß
+   ========================================================================== */
+:root {
+  --blau: #14304f;
+  --blau-dunkel: #0d2138;
+  --blau-hell: #eaf0f6;
+  --rot: #c8102e;
+  --rot-hell: #faeef0;
+  --sand: #f7f5f0;
+  --text: #1e2430;
+  --text-invers: #f5f7fa;
+  --rand: #d8dde3;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: var(--sand);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ---------- Kopf & Navigation ---------- */
+header.site {
+  background: linear-gradient(160deg, var(--blau) 0%, var(--blau-dunkel) 100%);
+  color: var(--text-invers);
+  padding: 1.4rem 1.2rem 1.2rem;
+}
+header.site .inner { max-width: 62rem; margin: 0 auto; }
+header.site h1 { margin: 0; font-size: 1.45rem; letter-spacing: 0.01em; }
+header.site p.claim { margin: 0.35rem 0 0; opacity: 0.85; font-size: 0.98rem; }
+
+nav.site {
+  background: var(--blau-dunkel);
+  padding: 0 1.2rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+nav.site .inner {
+  max-width: 62rem;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem;
+}
+nav.site a {
+  color: var(--text-invers);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 3px solid transparent;
+}
+nav.site a:hover, nav.site a[aria-current="page"] {
+  border-bottom-color: var(--rot);
+  background: rgba(255 255 255 / 0.06);
+}
+
+/* ---------- Inhalt ---------- */
+main {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 1.8rem 1.2rem 3.5rem;
+}
+h2 { color: var(--blau); font-size: 1.55rem; margin: 2.2rem 0 0.7rem; line-height: 1.25; }
+h3 { color: var(--blau); margin: 1.6rem 0 0.5rem; }
+a { color: var(--blau); }
+
+/* Hero */
+.hero {
+  background: #fff;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  padding: 2.2rem 2rem;
+  margin: 0.5rem 0 1.5rem;
+}
+.hero .kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--rot);
+  margin: 0 0 0.5rem;
+}
+.hero h2 {
+  margin: 0 0 0.8rem;
+  font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+  line-height: 1.15;
+}
+.hero p.lead { font-size: 1.12rem; margin: 0; max-width: 44rem; }
+
+/* Stat-Kacheln (plakative Zahlen) */
+.statband {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.9rem;
+  margin: 1.5rem 0;
+}
+.stat {
+  background: var(--blau);
+  color: var(--text-invers);
+  border-radius: var(--radius);
+  padding: 1.1rem 1rem 1rem;
+  text-align: center;
+}
+.stat .zahl {
+  display: block;
+  font-size: clamp(2.1rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.05;
+  color: #fff;
+}
+.stat.signal { background: #fff; border: 2px solid var(--rot); color: var(--text); }
+.stat.signal .zahl { color: var(--rot); }
+.stat .label { display: block; font-size: 0.88rem; margin-top: 0.35rem; opacity: 0.92; }
+.stat .fussnote { display: block; font-size: 0.72rem; margin-top: 0.3rem; opacity: 0.7; }
+
+/* Karten (Konfliktstellen etc.) */
+.kartengrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1rem;
+  margin: 1.2rem 0;
+}
+.karte {
+  background: #fff;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+}
+.karte h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+.karte .tag {
+  display: inline-block;
+  background: var(--blau-hell);
+  color: var(--blau);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.65rem;
+  margin-bottom: 0.5rem;
+}
+.karte.kritisch { border-left: 4px solid var(--rot); }
+.karte p { margin: 0.3rem 0; font-size: 0.95rem; }
+.karte .zeit { font-size: 0.85rem; color: #5a6472; }
+
+/* Info-/Warnboxen */
+.hinweis {
+  background: var(--blau-hell);
+  border-left: 4px solid var(--blau);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.9rem 1.1rem;
+  margin: 1.2rem 0;
+}
+.warnung {
+  background: var(--rot-hell);
+  border-left: 4px solid var(--rot);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.9rem 1.1rem;
+  margin: 1.2rem 0;
+}
+
+/* Zitatblock (plakative Aussage) */
+.plakat {
+  background: var(--blau);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 1.6rem 1.8rem;
+  margin: 1.8rem 0;
+  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.35;
+}
+.plakat .quelle { display: block; font-size: 0.85rem; font-weight: 400; opacity: 0.8; margin-top: 0.6rem; }
+
+/* Tabellen */
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; background: #fff; }
+th, td { border: 1px solid var(--rand); padding: 0.55rem 0.7rem; text-align: left; font-size: 0.95rem; }
+th { background: var(--blau-hell); color: var(--blau); }
+
+/* Buttons */
+.button {
+  display: inline-block;
+  background: var(--blau);
+  color: #fff;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  margin: 0.4rem 0.6rem 0.4rem 0;
+}
+.button:hover { background: var(--blau-dunkel); }
+.button.signal { background: var(--rot); }
+.button.signal:hover { background: #a30d25; }
+
+/* Fußzeile */
+footer.site {
+  background: var(--blau-dunkel);
+  color: var(--text-invers);
+  padding: 1.4rem 1.2rem;
+  font-size: 0.85rem;
+}
+footer.site .inner { max-width: 62rem; margin: 0 auto; opacity: 0.85; }
+footer.site a { color: var(--text-invers); }
+
+/* Newsletter-Anmeldung */
+.newsletter-signup {
+  background: var(--blau-hell);
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  padding: 1.8rem 2rem;
+  margin: 2.5rem 0 1.5rem;
+}
+.newsletter-signup h2 { margin-top: 0; }
+.newsletter-form .newsletter-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 600px) {
+  .newsletter-form .newsletter-fields { grid-template-columns: 1fr; }
+}
+.newsletter-field label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  color: var(--blau);
+}
+.newsletter-field input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--rand);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #fff;
+}
+.newsletter-field input:focus {
+  outline: 2px solid var(--blau);
+  outline-offset: 1px;
+  border-color: var(--blau);
+}
+.newsletter-hinweis {
+  font-size: 0.82rem;
+  color: #5a6472;
+  margin: 0.5rem 0 1rem;
+}
+.newsletter-hinweis a { color: var(--blau); }
+
+/* Druck */
+@media print {
+  header.site, nav.site, footer.site, .no-print { display: none; }
+  body { background: #fff; }
+  main { max-width: none; padding: 0; }
+  .stat, .plakat { background: #fff !important; color: #000 !important; border: 1px solid #000; }
+}
