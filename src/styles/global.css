@@ -215,6 +215,17 @@ footer.site {
 footer.site .inner { max-width: 62rem; margin: 0 auto; opacity: 0.85; }
 footer.site a { color: var(--text-invers); }
 
+/* Temporäres Baustellen-Banner */
+.baustelle-banner {
+  background: #fff8e1;
+  border-bottom: 1px solid #e6d9a8;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.88rem;
+  color: #6b5d1f;
+}
+.baustelle-banner .inner { max-width: 62rem; margin: 0 auto; }
+.baustelle-banner a { color: #6b5d1f; font-weight: 600; }
+
 /* Newsletter-Anmeldung */
 .newsletter-signup {
   background: var(--blau-hell);
@@ -263,7 +274,7 @@ footer.site a { color: var(--text-invers); }
 
 /* Druck */
 @media print {
-  header.site, nav.site, footer.site, .no-print { display: none; }
+  header.site, nav.site, footer.site, .baustelle-banner, .no-print { display: none; }
   body { background: #fff; }
   main { max-width: none; padding: 0; }
   .stat, .plakat { background: #fff !important; color: #000 !important; border: 1px solid #000; }
