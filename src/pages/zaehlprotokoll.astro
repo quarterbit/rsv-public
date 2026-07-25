@@ -9,8 +9,12 @@ const intervalle = ['__:00–__:15', '__:15–__:30', '__:30–__:45', '__:45–
 <style>
   .kopf td { height: 2.2rem; }
   .kopf td.label { width: 30%; background: var(--blau-hell); font-weight: 600; }
+  .zaehltab { table-layout: fixed; width: 100%; }
   .zaehltab th { font-size: 0.82rem; }
-  .zaehltab td { height: 2.5rem; }
+  .zaehltab th:first-child { width: 5.5rem; }
+  .zaehltab td { height: 5rem; vertical-align: top; }
+  .zaehltab td:first-child { font-size: 0.8rem; vertical-align: middle; }
+  .zaehltab tr:last-child th { height: 2.2rem; }
   .unterschrift { margin-top: 2.5rem; display: flex; gap: 3rem; }
   .unterschrift div { flex: 1; border-top: 1px solid #000; padding-top: 0.3rem; font-size: 0.85rem; }
   .frei { border: 1px solid var(--rand); background: #fff; min-height: 6rem; padding: 0.5rem; }
