@@ -25,6 +25,8 @@ const nav = [
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title} | Radschnellverbindung Tennenlohe</title>
   <meta name="description" content={description} />
+  <!-- GoatCounter: cookiefreie, anonyme Besuchsstatistik -->
+  <script data-goatcounter="https://rsv-tennenlohe.goatcounter.com/count" async src="https://gc.zgo.at/count.js" is:inline></script>
 </head>
 <body>
   <header class="site">
@@ -60,7 +62,17 @@ const nav = [
       <a href="/zaehlprotokoll">Zählprotokoll</a> ·
       <a href="/impressum">Impressum</a> ·
       <a href="/datenschutz">Datenschutz</a>
+      <span id="besuchszaehler" hidden> · <span id="besuchszahl"></span> Besuche</span>
     </div>
   </footer>
+  <script is:inline>
+    fetch('https://rsv-tennenlohe.goatcounter.com/counter/TOTAL.json')
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data) => {
+        document.getElementById('besuchszahl').textContent = data.count;
+        document.getElementById('besuchszaehler').hidden = false;
+      })
+      .catch(() => {});
+  </script>
 </body>
 </html>
