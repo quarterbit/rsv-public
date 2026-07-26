@@ -13,6 +13,39 @@ import Base from '../layouts/Base.astro';
     </p>
   </section>
 
+  <h2>Video: Die gesamte Trasse aus Radfahrer-Sicht</h2>
+  <p>
+    Die komplette geplante Trasse der Radschnellverbindung, abgefahren mit dem Rad und
+    in 4K gefilmt — so erleben Radfahrende die Strecke heute.
+  </p>
+  <div class="video-embed" data-video-id="B_KneQ49j9o">
+    <div class="video-consent">
+      <p><strong>Video von YouTube laden?</strong></p>
+      <p class="video-hinweis">
+        Erst nach Klick wird eine Verbindung zu YouTube (Google) hergestellt und das Video
+        in der datenschutzfreundlichen Variante (youtube-nocookie.com) geladen.
+        Details in der <a href="/datenschutz">Datenschutzerklärung</a>.
+      </p>
+      <button type="button" class="button video-start">▶ Video abspielen</button>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.video-embed').forEach((embed) => {
+      const btn = embed.querySelector('.video-start');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        const id = embed.getAttribute('data-video-id');
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+        iframe.title = 'Video: Trasse der Radschnellverbindung Tennenlohe';
+        iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+        iframe.allowFullscreen = true;
+        embed.replaceChildren(iframe);
+      });
+    });
+  </script>
+
   <h2>Downloads</h2>
   <div class="kartengrid">
     <div class="karte">
@@ -28,8 +61,12 @@ import Base from '../layouts/Base.astro';
     <div class="karte">
       <span class="tag">Flyer</span>
       <h3>Info-Flyer &amp; Flugblatt</h3>
-      <p>Flyer für Vereine und Gaststätten sowie ein Flugblatt für Briefkästen —
-      <em>erscheinen hier in Kürze.</em></p>
+      <p>Flyer im A4-Format für Vereine und Gaststätten sowie ein Flugblatt (2×A5 zum
+      Schneiden) für Briefkästen.</p>
+      <p>
+        <a class="button" href="/downloads/Flyer-A4-Vereine-Gaststaetten.pdf">Flyer A4 (PDF)</a>
+        <a class="button" href="/downloads/Flugblatt-A5-Briefkasten.pdf">Flugblatt A5 (PDF)</a>
+      </p>
     </div>
   </div>
 
