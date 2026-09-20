@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Luftbild: Vorzugstrasse Radschnellverbindung durch Tennenlohe – Konfliktstellen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+<style>
+  html, body { margin: 0; height: 100%; font-family: system-ui, sans-serif; }
+  #map { height: 100%; }
+  .titlebox {
+    position: absolute; top: 10px; left: 55px; z-index: 1000;
+    background: rgba(255,255,255,.93); padding: 10px 16px; border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4); max-width: 500px;
+  }
+  .titlebox h1 { font-size: 15px; margin: 0 0 4px; }
+  .titlebox p { font-size: 12px; margin: 0; color: #333; }
+  .legend {
+    position: absolute; bottom: 22px; left: 10px; z-index: 1000;
+    background: rgba(255,255,255,.93); padding: 10px 14px; border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4); font-size: 12px; line-height: 1.7;
+  }
+  .legend .line { display: inline-block; width: 26px; height: 5px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+  .legend .dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: middle; margin-right: 8px; border: 2px solid #fff; box-shadow: 0 0 3px rgba(0,0,0,.6); }
+  .num-icon {
+    background: #d32f2f; color: #fff; border: 2px solid #fff; border-radius: 50%;
+    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px; box-shadow: 0 0 4px rgba(0,0,0,.7);
+  }
+  .leaflet-popup-content { font-size: 13px; }
+  .leaflet-popup-content b { color: #b71c1c; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="titlebox">
+  <h1>Radschnellverbindung Erlangen–Nürnberg: Vorzugstrasse durch den Tennenloher Ortskern</h1>
+  <p>Leitensteig · Branderweg · Sebastianstraße — <b>1,1 km Ortsdurchfahrt</b>, 14 Konfliktstellen, 36 private Ausfahrten, 8 Querungen (im Schnitt alle 31 m) · Straßendaten: OpenStreetMap · Luftbild: Esri World Imagery</p>
+</div>
+
+<div class="legend">
+  <b>Trasse</b><br>
+  <span class="line" style="background:#d32f2f"></span> Vorzugstrasse durch Wohnstraßen (Tempo 20/30)<br>
+  <span class="line" style="background:#9e9e9e"></span> Sebastianstraße Hauptfahrbahn (50 km/h, zur Einordnung)<br>
+  <span style="display:inline-block; margin-top:6px"><b>Konfliktstellen</b></span><br>
+  <span class="dot" style="background:#d32f2f"></span> K1–K8 (anklicken — Auswahl der 14 dokumentierten Stellen)
+</div>
+
+<script src="/vendor/leaflet/leaflet.js"></script>
+<script src="tennenlohe-segments.js"></script>
+<script>
+const map = L.map('map').setView([49.5495, 11.0290], 16);
+
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 19,
+  attribution: 'Luftbild © Esri, Maxar, Earthstar Geographics | Straßendaten © OpenStreetMap-Mitwirkende (ODbL)'
+}).addTo(map);
+
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 19, opacity: 0.9
+}).addTo(map);
+
+// Wohnstraßen = Trasse (rot), Hauptfahrbahn Sebastianstraße = grau (Kontext)
+// Fortführung der Trasse auf der Sebastianstraße nach Norden bis zum SV Tennenlohe
+const TRASSE_NORD = new Set([263805230, 753503237, 1203123965]);
+// Stichstraßen der Sebastianstraße (bei K2 und südlich der Kirche) – nicht Teil der Trasse
+const AUSGEBLENDET = new Set([4907025, 4907024]);
+SEGMENTS.forEach(seg => {
+  if (AUSGEBLENDET.has(seg.id)) return;
+  const isTrasse = seg.highway === 'residential' || TRASSE_NORD.has(seg.id);
+  L.polyline(seg.coords, { color: '#000', weight: isTrasse ? 9 : 6, opacity: 0.3 }).addTo(map);
+  L.polyline(seg.coords, { color: isTrasse ? '#d32f2f' : '#9e9e9e', weight: isTrasse ? 5 : 3.5, opacity: 0.95 })
+    .bindPopup(`${seg.name}${seg.maxspeed ? ' – Tempo ' + seg.maxspeed : ''}${isTrasse ? (TRASSE_NORD.has(seg.id) ? '<br><b>Teil der Vorzugstrasse (Fortführung bis SV Tennenlohe)</b>' : '<br><b>Teil der Vorzugstrasse (Wohnstraße)</b>') : ' – Hauptfahrbahn'}`)
+    .addTo(map);
+});
+
+function numIcon(label) {
+  return L.divIcon({ className: '', html: `<div class="num-icon">${label}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
+}
+const points = [
+  { n: 'K1', pos: [49.54761, 11.02666], title: 'Eingang Spielplatz (Branderweg)',
+    text: 'Kinder betreten und queren die Trasse direkt am Spielplatzeingang – unvorhersehbar und genau auf Höhe des bevorrechtigten Radverkehrs.<br><i>Kritisch: nachmittags, Wochenende, Ferien</i>' },
+  { n: 'K2', pos: [49.54858, 11.02880], title: 'Parkplatz Gaststätte „Zum Schloss"',
+    text: 'Ein- und ausparkende Gäste, Rangierverkehr und Fußgänger zwischen Parkplatz und Eingang kreuzen die Trasse.<br><i>Kritisch: Mittags- und Abendbetrieb</i>' },
+  { n: 'K3', pos: [49.55022, 11.02970], title: 'Evangelische Kirche St. Maria Magdalena (Sebastianstr. 4)',
+    text: 'Gottesdienste und Gemeindeveranstaltungen: ältere Fußgänger, Querungen, Parken direkt an der Trasse. Seniorennachmittage (Rollator!), Konfirmandenunterricht, Gemeindebüro Branderweg 1.<br><i>Kritisch: So vormittags, Veranstaltungen</i>' },
+  { n: 'K4', pos: [49.55305, 11.03080], title: 'Sportheim SV Tennenlohe & Gaststätte „Zur Wied"',
+    text: 'Trainings-/Spielbetrieb mit Kindern, Bring- und Parkverkehr, Gaststätte bis in die Abendstunden – Fußgänger in Dämmerung und Dunkelheit. Künftig zusätzlich Ein-/Ausstieg der StUB in unmittelbarer Nähe.<br><i>Kritisch: werktags ab 17 Uhr, Wochenende, abends</i>' },
+  { n: 'K5', pos: [49.55354, 11.02866], title: 'Grundschule Tennenlohe (Enggleis 6)',
+    text: 'Schulwege queren die Trasse – Grundschüler morgens zeitgleich mit der Radpendler-Spitze.<br><i>Kritisch: Mo–Fr ca. 7:30–8:15 Uhr und mittags</i>' },
+  { n: 'K6', pos: [49.54580, 11.02700], title: 'Parkdruck auf der gesamten Strecke',
+    text: 'Hoher Parkdruck in Leitensteig, Branderweg und Sebastianstraße: parkende Fahrzeuge verdecken die Sicht auf <b>36 private Ausfahrten</b> und 8 Querungen.<br><i>Kritisch: abends und nachts am höchsten</i>' },
+  { n: 'K7', pos: [49.54967, 11.03031], title: 'Bushaltestelle „Tennenlohe Kirche"',
+    text: 'Fahrgäste queren zu <b>jeder Tages- und Nachtzeit</b> auf dem Weg in den Ort und aus dem Ort die Schnellverbindung – direkt zwischen Haltestelle und Ortskern, in unmittelbarer Nähe von Kirche (K3) und Gaststätten.<br><i>Kritisch: ganztägig, besonders zu Pendlerzeiten und spätabends</i>' },
+  { n: 'K8', pos: [49.54495, 11.02761], title: 'Gebr. Barth GmbH – Kfz-Werkstatt & ADAC-Station (Leitensteig 31)',
+    text: 'Werkstatt- und ADAC-ClubMobil-Betrieb <b>direkt an der Trasse</b>: Kundenverkehr, Rangieren von Fahrzeugen und Abschleppbetrieb kreuzen den bevorrechtigten Radverkehr auf dem Leitensteig.<br><i>Kritisch: werktags ganztägig, Pannenhilfe auch außerhalb der Geschäftszeiten</i>' },
+];
+points.forEach(p => {
+  L.marker(p.pos, { icon: numIcon(p.n) })
+    .bindPopup(`<b>${p.n} – ${p.title}</b><br>${p.text}`)
+    .addTo(map);
+});
+
+// Gesamtansicht: Trasse + Marker
+const b = L.latLngBounds(points.map(p => p.pos));
+SEGMENTS.filter(s => s.highway === 'residential').forEach(s => s.coords.forEach(c => b.extend(c)));
+map.fitBounds(b.pad(0.12));
+</script>
+</body>
+</html>

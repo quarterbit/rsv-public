@@ -33,6 +33,16 @@ const konfliktstellen = [
     text: 'Hoher Parkdruck in Leitensteig, Branderweg und Sebastianstraße: parkende Fahrzeuge verdecken Sicht auf Ausfahrten und Querungen.',
     zeit: 'Abends und nachts am höchsten', kritisch: false,
   },
+  {
+    nr: 'K7', titel: 'Bushaltestelle „Tennenlohe Kirche"', tag: 'ÖPNV & Fußverkehr',
+    text: 'Fahrgäste queren zu jeder Tages- und Nachtzeit die Trasse — auf dem Weg zwischen Haltestelle und Ortskern, direkt neben Kirche und Gaststätten.',
+    zeit: 'Ganztägig, besonders zu Pendlerzeiten und spätabends', kritisch: true,
+  },
+  {
+    nr: 'K8', titel: 'Kfz-Werkstatt & ADAC-Station (Leitensteig 31)', tag: 'Gewerbe',
+    text: 'Werkstatt- und ADAC-ClubMobil-Betrieb direkt an der Trasse: Kundenverkehr, Rangieren von Fahrzeugen und Abschleppbetrieb kreuzen den bevorrechtigten Radverkehr.',
+    zeit: 'Werktags ganztägig, Pannenhilfe auch außerhalb der Geschäftszeiten', kritisch: false,
+  },
 ];
 ---
 <Base title="Konfliktstellen auf der Vorzugstrasse" aktiv="konfliktstellen"
@@ -40,7 +50,7 @@ const konfliktstellen = [
 
   <section class="hero">
     <p class="kicker">Leitensteig · Branderweg · Sebastianstraße</p>
-    <h2>Eine Trasse, 14 Konfliktstellen — und 36 Ausfahrten.</h2>
+    <h2>1,1 km Ortsdurchfahrt, 16 Konfliktstellen — und 36 Ausfahrten.</h2>
     <p class="lead">
       Was auf dem Papier als „Vorzugstrasse" erscheint, ist vor Ort ein dichter Korridor aus
       Schulwegen, Vereinsleben, Gastronomie, Einsatzverkehr und privaten Grundstücksausfahrten.
@@ -48,10 +58,21 @@ const konfliktstellen = [
     </p>
   </section>
 
+  <h2>Die Trasse im Luftbild</h2>
+  <p>
+    Rote Linie: die beschlossene Vorzugstrasse durch die Wohnstraßen. Marker K1–K8: die wichtigsten
+    Konfliktstellen — anklickbar mit Details. Straßengeometrie: OpenStreetMap · Luftbild: Esri World Imagery.
+  </p>
+  <iframe src="/karten/tennenlohe.html" title="Luftbild der Vorzugstrasse durch Tennenlohe mit Konfliktstellen"
+    style="width:100%; height:70vh; min-height:420px; border:1px solid #ccc; border-radius:8px;" loading="lazy"></iframe>
+  <p>
+    <a class="button" href="/karten/tennenlohe.html" target="_blank" rel="noopener">Karte im Vollbild öffnen →</a>
+  </p>
+
   <div class="statband">
     <Stat zahl="36" label="Haus-, Hof- &amp; Garagen-Ausfahrten" fussnote="gezählt in unserer Video-Dokumentation der Trasse" signal={true} />
     <Stat zahl="8" label="Straßenquerungen" />
-    <Stat zahl="14" label="besondere Konfliktstellen" />
+    <Stat zahl="16" label="besondere Konfliktstellen" />
     <Stat zahl="3" label="Straßen im Ortskern betroffen" />
     <Stat zahl="1" label="Grundschule mit querenden Schulwegen" />
     <Stat zahl="abends" label="Gaststättenbetrieb an der Trasse — Fußgänger im Dunkeln" />
@@ -86,6 +107,27 @@ const konfliktstellen = [
     Verkehrsarten und geringe Verlustzeiten</em>. Abweichungen vom Standard sind nur auf
     <em>kurzen Streckenanteilen</em> zulässig. Eine Trasse, die auf ihrer gesamten Ortsdurchfahrt
     aus Konfliktstellen besteht, erfüllt diese Voraussetzungen strukturell nicht.
+  </p>
+
+  <h2>Die Ortsdurchfahrt in Zahlen</h2>
+  <div class="statband">
+    <Stat zahl="1,1 km" label="Länge der Ortsdurchfahrt Tennenlohe" fussnote="gemessen an der OpenStreetMap-Straßengeometrie" />
+    <Stat zahl="6,4 %" label="Anteil an der 17,5-km-Gesamttrasse — das FGSV-Ausnahme-Budget liegt bei rund 10 %" signal={true} />
+    <Stat zahl="alle 31 m" label="im Schnitt eine Ausfahrt oder Querung (44 auf 1,1 km)" />
+    <Stat zahl="~34 s" label="zulässige Verlustzeit für die gesamte Ortsdurchfahrt (30 s/km innerorts)" fussnote="BASt V320 / H-RSV 2021" />
+  </div>
+  <p>
+    Die geplante Führung durch den Tennenloher Ortskern ist rund <strong>1,1 Kilometer</strong> lang —
+    <strong>6,4&nbsp;%</strong> der Gesamttrasse. Die Fördervorgaben erlauben Abweichungen vom
+    Radschnellweg-Standard nur auf kurzen Streckenanteilen (FGSV-Richtwert: rund 10&nbsp;% der
+    Gesamtstrecke) — <strong>Tennenlohe allein verbraucht davon fast zwei Drittel</strong>, bevor
+    Waldabschnitte, Engstellen und die übrigen Ortslagen überhaupt angerechnet sind. Und das mit einer
+    Strecke, die durchgehend aus Konfliktstellen besteht: im Schnitt alle 31 Meter eine Ausfahrt oder
+    Querung. Das zulässige Verlustzeiten-Budget von rund 34 Sekunden für diesen Abschnitt ist mit
+    Schule, Kirche, Spielplatz, zwei Gaststätten, Bushaltestelle und Kfz-Betrieb an der Strecke nicht
+    einzuhalten. <strong>Entweder wird hier kein Radschnellweg-Standard erreicht — dann entfällt die
+    Fördergrundlage. Oder er wird erzwungen</strong> — mit den Folgen, die
+    <a href="/vergleich-oberhaching">Oberhaching seit Jahren vorführt</a>.
   </p>
   <p>
     <a class="button" href="/behoerden">Unsere Forderungen an Stadt &amp; Regierung →</a>

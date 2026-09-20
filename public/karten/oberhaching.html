@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Oberhaching wollte die Rad-Schnellverbindung &amp; bekam den Dauerkonflikt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+<style>
+  html, body { margin: 0; height: 100%; font-family: system-ui, sans-serif; }
+  #map { height: 100%; }
+  .titlebox {
+    position: absolute; top: 10px; left: 55px; z-index: 1000;
+    background: rgba(255,255,255,.93); padding: 10px 16px; border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4); max-width: 480px;
+  }
+  .titlebox h1 { font-size: 15px; margin: 0 0 4px; }
+  .titlebox p { font-size: 12px; margin: 0; color: #333; }
+  .legend {
+    position: absolute; bottom: 22px; left: 10px; z-index: 1000;
+    background: rgba(255,255,255,.93); padding: 10px 14px; border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4); font-size: 12px; line-height: 1.7;
+  }
+  .legend .line { display: inline-block; width: 26px; height: 5px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+  .legend .dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: middle; margin-right: 8px; border: 2px solid #fff; box-shadow: 0 0 3px rgba(0,0,0,.6); }
+  .num-icon {
+    background: #d32f2f; color: #fff; border: 2px solid #fff; border-radius: 50%;
+    width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; box-shadow: 0 0 4px rgba(0,0,0,.7);
+  }
+  .leaflet-popup-content { font-size: 13px; }
+  .leaflet-popup-content b { color: #b71c1c; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="titlebox">
+  <h1>Oberhaching wollte die Rad-Schnellverbindung &amp; bekam den Dauerkonflikt</h1>
+  <p>Vergleichsfall für Tennenlohe · Streckenverlauf aus OpenStreetMap-Daten (Tempolimits &amp; Belag amtlich erfasst) · Luftbild: Esri World Imagery</p>
+</div>
+
+<div class="legend">
+  <b>Streckenabschnitte (Linienstraße)</b><br>
+  <span class="line" style="background:#d32f2f"></span> Tempo 10 – Konfliktzone (Pflaster/Schwellen)<br>
+  <span class="line" style="background:#f9a825"></span> Tempo 30 – Wohnstraße<br>
+  <span class="line" style="background:#43a047"></span> freie Strecke (Perlacher Forst)<br>
+  <span style="display:inline-block; margin-top:6px"><b>Konfliktpunkte</b></span><br>
+  <span class="dot" style="background:#d32f2f"></span> nummerierte Marker (anklicken)
+</div>
+
+<script src="/vendor/leaflet/leaflet.js"></script>
+<script src="linienstrasse-segments.js"></script>
+<script>
+const map = L.map('map').setView([48.0335, 11.5770], 15);
+
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 19,
+  attribution: 'Luftbild © Esri, Maxar, Earthstar Geographics | Straßendaten © OpenStreetMap-Mitwirkende (ODbL)'
+}).addTo(map);
+
+// dezente Beschriftungen über dem Luftbild
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 19, opacity: 0.9
+}).addTo(map);
+
+// Streckensegmente nach Tempolimit einfärben
+function colorFor(seg) {
+  if (seg.maxspeed === '10') return '#d32f2f';
+  if (seg.maxspeed === '30') return '#f9a825';
+  return '#43a047'; // Forstabschnitt ohne Limit
+}
+SEGMENTS.forEach(seg => {
+  L.polyline(seg.coords, { color: '#000', weight: 8, opacity: 0.35 }).addTo(map);
+  L.polyline(seg.coords, { color: colorFor(seg), weight: 4.5, opacity: 0.95 })
+    .bindPopup(`Linienstraße – ${seg.maxspeed ? 'Tempo ' + seg.maxspeed : 'ohne Tempolimit (Forst)'}${seg.surface === 'sett' ? '<br><b>Belag: Pflaster</b> (2018 statt Asphalt eingebaut)' : ''}`)
+    .addTo(map);
+});
+
+// Konfliktpunkte
+function numIcon(n) {
+  return L.divIcon({ className: '', html: `<div class="num-icon">${n}</div>`, iconSize: [26, 26], iconAnchor: [13, 13] });
+}
+const points = [
+  { n: 1, pos: [48.03588, 11.57499], title: 'Biergarten Kugler Alm',
+    text: 'Gastronomie direkt an der Radhauptverbindung: ständige Fußgängerquerungen zwischen Biergarten und Parkplatz. Kernpunkt des jahrelangen Konflikts.' },
+  { n: 2, pos: [48.03578, 11.57569], title: 'Pflasterabschnitt + Bodenschwellen',
+    text: 'Tempo 10 seit Jahren; 2018 Asphalt durch <b>Pflaster</b> ersetzt (in OSM als surface=sett erfasst). 2025/26 zusätzlich <b>Bodenschwellen</b> – ADFC- und Polizei-Kritik, dokumentierte Stürze.' },
+  { n: 3, pos: [48.03534, 11.57595], title: 'Umlaufsperren (Juli 2026)',
+    text: 'Radfahrer wichen über den <b>Gehweg</b> aus – die Gemeinde montierte Umlaufsperren zum Schutz der Fußgänger. Damit ist die „Schnellverbindung" hier faktisch beendet.' },
+  { n: 4, pos: [48.03442, 11.57642], title: 'Bushaltestelle + Parkplatzverkehr',
+    text: 'Haltestelle „Kugler Alm" und Parkplatz-Zufahrten kreuzen die Route – zusätzliche Konfliktfläche zwischen Kfz, Bus, Fußgängern und schnellem Radverkehr (tz, 05.12.2025).' },
+  { n: 5, pos: [48.02870, 11.57902], title: 'Enge Wohnstraße (Tempo 30)',
+    text: 'Die Route führt als normale <b>Wohnstraße</b> durch Deisenhofen – strukturell identisch mit Leitensteig / Branderweg / Sebastianstraße. Eskalation bis zu ausgelegten <b>Reißzwecken</b> (Bay. Staatszeitung, 11.07.2025).' },
+  { n: 6, pos: [48.02290, 11.58155], title: 'Richtung Deisenhofen Bhf / Sauerlach',
+    text: 'Südlicher Anschluss der Radhauptverbindung Richtung Bahnhof Deisenhofen und weiter nach Sauerlach (Korridor aus dem Radschnellweg-Prüfprogramm des Landkreises München).' },
+  { n: 7, pos: [48.04531, 11.57093], title: 'Perlacher Forst → München',
+    text: 'Nördlich der Kugler Alm läuft die Strecke frei durch den Forst Richtung Geiselgasteig/München – hier funktioniert sie. Der Konflikt entsteht <b>nur</b> dort, wo sie auf Wohnumfeld und Gastronomie trifft.' },
+];
+points.forEach(p => {
+  L.marker(p.pos, { icon: numIcon(p.n) })
+    .bindPopup(`<b>${p.n}. ${p.title}</b><br>${p.text}`)
+    .addTo(map);
+});
+
+// Gesamtansicht auf die Route
+map.fitBounds(L.latLngBounds(points.map(p => p.pos)).pad(0.15));
+</script>
+</body>
+</html>
