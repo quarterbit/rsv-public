@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Trassenvergleich: Ursprüngliche Führung an der B4 vs. beschlossene Trasse durch den Ortskern Tennenlohe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+<style>
+  html, body { margin: 0; height: 100%; font-family: system-ui, sans-serif; }
+  #map { height: 100%; }
+  .titlebox {
+    position: absolute; top: 10px; left: 55px; z-index: 1000;
+    background: rgba(255,255,255,.93); padding: 10px 36px 10px 16px; border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4); max-width: 520px;
+  }
+  .titlebox .close {
+    position: absolute; top: 6px; right: 8px; border: 0; background: none;
+    font-size: 18px; line-height: 1; cursor: pointer; color: #555; font-weight: 700;
+  }
+  .titlebox .close:hover { color: #000; }
+  .titlebox h1 { font-size: 15px; margin: 0 0 4px; }
+  .titlebox p { font-size: 12px; margin: 0; color: #333; }
+  .legend {
+    position: absolute; bottom: 22px; left: 10px; z-index: 1000;
+    background: rgba(255,255,255,.93); padding: 10px 14px; border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4); font-size: 12px; line-height: 1.7;
+  }
+  .legend .line { display: inline-block; width: 26px; height: 5px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+  .legend .line.dashed { background: repeating-linear-gradient(90deg, #7b1fa2 0 6px, transparent 6px 11px); }
+  .legend .dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: middle; margin-right: 8px; border: 2px solid #fff; box-shadow: 0 0 3px rgba(0,0,0,.6); }
+  .zaehl-icon {
+    background: #1565c0; color: #fff; border: 2px solid #fff; border-radius: 50%;
+    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; box-shadow: 0 0 4px rgba(0,0,0,.7);
+  }
+  .leaflet-popup-content { font-size: 13px; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="titlebox" id="titlebox">
+  <button class="close" onclick="document.getElementById('titlebox').style.display='none'" title="Infobox ausblenden" aria-label="Infobox ausblenden">×</button>
+  <h1>Radschnellverbindung bei Tennenlohe: ursprüngliche und jetzt verfolgte Führung</h1>
+  <p>Ursprünglich war die Führung entlang der B4 vorgesehen (so im Radnetzplan der Stadt Erlangen,
+  Stand 2019). Die 2025 beschlossene Vorzugstrasse führt stattdessen durch den Ortskern —
+  Leitensteig, Branderweg, Sebastianstraße. Blau: die amtliche Radzählstelle der Stadt Nürnberg
+  auf dem Korridor. Eigene Darstellung · Kartendaten © OpenStreetMap-Mitwirkende (ODbL) ·
+  Zoom per Mausrad nach Klick in die Karte</p>
+</div>
+
+<div class="legend">
+  <b>Trassenführung</b><br>
+  <span class="line dashed"></span> ursprünglich vorgesehen: Korridor entlang der B4 (schematisch)<br>
+  <span class="line" style="background:#d32f2f"></span> jetzt verfolgt: durch den Ortskern (Wohnstraßen)<br>
+  <span class="line" style="background: repeating-linear-gradient(90deg, #d32f2f 0 3px, transparent 3px 9px)"></span> Zulauf aus Reutles (Reutleser Weg, schematisch)<br>
+  <span style="display:inline-block; margin-top:6px"><b>Messung</b></span><br>
+  <span class="dot" style="background:#1565c0"></span> Dauerzählstelle Rad „Erlanger Straße" (RZG003), Nürnberg-Buch
+</div>
+
+<script src="/vendor/leaflet/leaflet.js"></script>
+<script src="tennenlohe-segments.js"></script>
+<script src="b4-segments.js"></script>
+<script>
+const map = L.map('map', { scrollWheelZoom: false }).setView([49.545, 11.031], 13);
+
+// Mausrad-Zoom erst nach Klick in die Karte, damit die Seite darüber normal scrollt
+map.on('click', () => map.scrollWheelZoom.enable());
+map.on('mouseout', () => map.scrollWheelZoom.disable());
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: 'Kartendaten © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende (ODbL) · Trassendarstellung: eigene Recherche'
+}).addTo(map);
+
+// Ursprüngliche Führung: Korridor entlang der B4 (violett, gestrichelt)
+const b4Group = L.featureGroup();
+B4_SEGMENTS.forEach(seg => {
+  if (!seg.coords || seg.coords.length < 2) return;
+  L.polyline(seg.coords, { color: '#7b1fa2', weight: 5, opacity: 0.85, dashArray: '10 8' })
+    .bindPopup('<b>Ursprünglich vorgesehene Führung:</b> entlang der B4 — direkt, kreuzungsarm, außerhalb der Wohngebiete. So noch im Radnetzplan der Stadt Erlangen (Stand 2019) dargestellt.')
+    .addTo(b4Group);
+});
+b4Group.addTo(map);
+
+// Jetzt verfolgte Vorzugstrasse: Ortskern (rot) — gleiche Logik wie Konfliktstellen-Karte
+const TRASSE_NORD = new Set([263805230, 753503237, 1203123965]);
+const AUSGEBLENDET = new Set([4907025, 4907024]);
+const ortGroup = L.featureGroup();
+SEGMENTS.forEach(seg => {
+  if (AUSGEBLENDET.has(seg.id)) return;
+  const isTrasse = seg.highway === 'residential' || TRASSE_NORD.has(seg.id);
+  if (!isTrasse) return;
+  L.polyline(seg.coords, { color: '#000', weight: 9, opacity: 0.3 }).addTo(ortGroup);
+  L.polyline(seg.coords, { color: '#d32f2f', weight: 5, opacity: 0.95 })
+    .bindPopup(`<b>Beschlossene Vorzugstrasse:</b> ${seg.name} — mitten durch das Wohngebiet, vorbei an Grundschule, Kirche, Spielplatz und Sportgelände.`)
+    .addTo(ortGroup);
+});
+ortGroup.addTo(map);
+
+// Zulauf aus Reutles über den Reutleser Weg (schematisch)
+const zulauf = L.polyline([[49.5365, 11.0297], [49.5384, 11.0292], [49.5406, 11.0286], [49.5427, 11.0280], [49.5443998, 11.0275624]],
+  { color: '#d32f2f', weight: 4, opacity: 0.9, dashArray: '2 8' })
+  .bindPopup('<b>Zulauf der Radschnellverbindung aus Reutles</b> über den Reutleser Weg (schematische Darstellung) — hier kommen die Radpendler aus Richtung Nürnberg an und werden in den Leitensteig geleitet.')
+  .addTo(map);
+L.marker([49.5395, 11.0289], { icon: L.divIcon({ className: '', iconSize: [130, 18], iconAnchor: [65, 9],
+  html: '<div style="font-size:11px; font-weight:700; color:#b71c1c; text-shadow:0 0 3px #fff, 0 0 3px #fff; transform:rotate(-75deg); white-space:nowrap;">← Radler aus Reutles</div>' }), interactive: false }).addTo(map);
+const zaehlIcon = L.divIcon({ className: '', html: '<div class="zaehl-icon">Z</div>', iconSize: [30, 30], iconAnchor: [15, 15] });
+const zaehlstelle = L.marker([49.5028792, 11.0444654], { icon: zaehlIcon })
+  .bindPopup('<b>Dauerzählstelle „Erlanger Straße" (RZG003)</b> der Stadt Nürnberg bei Buch — direkt auf dem Korridor der geplanten Radschnellverbindung. Gemessen seit Juni 2023: im Mittel <b>rund 500–650 Radfahrten/Tag</b>. Die Bundesförderung setzt 2.000 im Tagesmittel voraus. <a href="/zaehlung" target="_top">Zur Auswertung →</a>')
+  .addTo(map);
+
+map.fitBounds(b4Group.getBounds().extend(ortGroup.getBounds()).extend(zaehlstelle.getLatLng()), { padding: [30, 30] });
+</script>
+</body>
+</html>

@@ -51,7 +51,11 @@
 <script src="/vendor/leaflet/leaflet.js"></script>
 <script src="linienstrasse-segments.js"></script>
 <script>
-const map = L.map('map').setView([48.0335, 11.5770], 15);
+const map = L.map('map', { scrollWheelZoom: false }).setView([48.0335, 11.5770], 15);
+
+// Mausrad-Zoom erst nach Klick in die Karte, damit die Seite darüber normal scrollt
+map.on('click', () => map.scrollWheelZoom.enable());
+map.on('mouseout', () => map.scrollWheelZoom.disable());
 
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
   maxZoom: 19,
