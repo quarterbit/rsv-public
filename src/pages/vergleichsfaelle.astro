@@ -1,0 +1,193 @@
+---
+import Base from '../layouts/Base.astro';
+import Stat from '../components/Stat.astro';
+---
+<Base title="Vergleichsfälle Oberhaching und Markt Schwaben: Radschnellwege im Münchner Umland" aktiv="vergleichsfaelle"
+  description="Zwei Radschnellweg-Projekte im Münchner Umland: Oberhaching kämpft seit Jahren mit dem Konflikt in der Wohnstraße, Markt Schwaben verlor die Bundesförderung wegen innerörtlicher Engstellen.">
+
+  <section class="hero">
+    <p class="kicker">Vergleichsfälle · Landkreise München und Ebersberg</p>
+    <h2>Radschnellwege im Münchner Umland: zwei Projekte, zwei Probleme</h2>
+    <p class="lead">
+      In <strong>Oberhaching</strong> wurde eine Radhauptverbindung durch eine Wohnstraße gebaut —
+      seit acht Jahren eskaliert dort der Konflikt zwischen Anwohnern und Radverkehr.
+      In <strong>Markt Schwaben</strong> kam es gar nicht erst so weit: Der Radschnellweg
+      nach München verlor im September 2026 die Bundesförderung, weil innerörtliche Engstellen
+      den geforderten Standard unterschreiten. Beide Fälle betreffen genau die Trassenführung,
+      die in Tennenlohe geplant ist — hier dokumentieren wir sie einzeln.
+    </p>
+    <p>
+      <a class="button" href="#oberhaching">Fall Oberhaching ↓</a>
+      <a class="button" href="#markt-schwaben">Fall Markt Schwaben ↓</a>
+    </p>
+  </section>
+
+  <h2 id="oberhaching">Fall Oberhaching: Der Konflikt in der Wohnstraße</h2>
+  <p>
+    Was passiert, wenn eine Rad-Schnellverbindung durch eine Wohnstraße und an einer Gaststätte
+    vorbeigeführt wird? Oberhaching bei München führt es seit Jahren vor — als erklärt
+    fahrradfreundliche Gemeinde, die die Route <strong>selbst wollte</strong>. Niemand kann dort
+    „Verhinderer" rufen. Und trotzdem eskaliert der Konflikt bis heute.
+  </p>
+
+  <div class="statband">
+    <Stat zahl="10 km/h" label="angeordnetes Tempo auf der „Schnellverbindung“ vor der Kugler Alm" signal={true} />
+    <Stat zahl="2018" label="Asphalt teilweise durch Pflaster ersetzt" />
+    <Stat zahl="2025" label="erste Bodenschwellen — gegen den Protest des ADFC" />
+    <Stat zahl="2026" label="Umlaufsperren, weil Radfahrer über den Gehweg auswichen" />
+  </div>
+
+  <h3>Die Parallele zu Tennenlohe</h3>
+  <p>
+    Die überörtliche Radhauptverbindung (aus dem Radschnellweg-Prüfprogramm des Landkreises München,
+    Korridor Sauerlach–Geiselgasteig) ist seit 2020 auf 7,5 km durchgängig befahrbar — mit Winterdienst.
+    Am Nordende verläuft sie durch eine <strong>schmale Wohnstraße (Linienstraße)</strong> und direkt am
+    <strong>Biergarten Kugler Alm</strong> vorbei. Strukturell ist das exakt die Situation, die die
+    Vorzugstrasse für Leitensteig, Branderweg und Sebastianstraße schaffen würde:
+    Schnellverbindung + Wohnstraße + Gastronomie.
+  </p>
+
+  <h3>Die Strecke im Luftbild</h3>
+  <p>
+    Rot: Tempo-10-Konfliktzone mit Pflaster und Schwellen. Orange: Wohnstraße Tempo 30.
+    Grün: die freie Strecke durch den Perlacher Forst — dort funktioniert die Verbindung.
+    Marker 1–7: die Konfliktpunkte, anklickbar.
+  </p>
+  <iframe src="/karten/oberhaching.html" title="Luftbild der Radhauptverbindung durch Oberhaching/Deisenhofen mit Konfliktpunkten"
+    style="width:100%; height:70vh; min-height:420px; border:1px solid #ccc; border-radius:8px;" loading="lazy"></iframe>
+  <p>
+    <a class="button" href="/karten/oberhaching.html" target="_blank" rel="noopener">Karte im Vollbild öffnen →</a>
+  </p>
+
+  <h3>Acht Jahre Eskalation — die Chronologie</h3>
+  <table>
+    <tr><th>Zeitraum</th><th>Ereignis</th></tr>
+    <tr><td>bis 2018</td><td>Ständige Konflikte → <strong>Tempo-10-Schilder</strong> und Rotmarkierungen; 2018 wird der Asphalt teilweise durch <strong>Pflaster</strong> ersetzt</td></tr>
+    <tr><td>2025</td><td>Die Gemeinde baut erstmals <strong>Bodenschwellen</strong> vor der Kugler Alm ein. Der <strong>ADFC München warnt</strong> öffentlich: erhöhte Gefährdung, Widerspruch zum Charakter der Radhauptverbindung. Auch die <strong>Polizei</strong> äußert Bedenken.</td></tr>
+    <tr><td>Juli 2025</td><td>Rücksicht-Aktion des Bürgermeisters (Müsliriegel für Radler) — Wirkung „nur bedingt". Eskalation unter Anwohnern: <strong>Reißzwecken</strong> werden auf dem Radweg ausgelegt.</td></tr>
+    <tr><td>Aug. 2025</td><td>Die Gemeinde erwägt <strong>Blitzer</strong> gegen zu schnelle Radfahrer.</td></tr>
+    <tr><td>Nov. 2025</td><td>Schwellen werden für den Winterdienst abmontiert — und per Gemeindebeschluss <strong>trotz ADFC-Kritik dauerhaft wieder eingeplant</strong>.</td></tr>
+    <tr><td>Frühjahr 2026</td><td><strong>Drei zusätzliche Schwellen</strong>; Presseberichte über Stürze: „Radler springen, E-Biker straucheln".</td></tr>
+    <tr><td>Juli 2026</td><td>Radfahrer weichen über den <strong>Gehweg</strong> aus → die Gemeinde montiert <strong>Umlaufsperren</strong> zum Schutz der Fußgänger. Damit ist die „Schnellverbindung" an dieser Stelle faktisch beendet.</td></tr>
+  </table>
+
+  <div class="plakat">
+    „Wohin das führt, zeigt Oberhaching bei München: Nach jahrelangen Konflikten hat die Gemeinde
+    Tempo 10 angeordnet, Bodenschwellen eingebaut und zuletzt Umlaufsperren montiert — der ADFC
+    kritisiert, damit sei der Charakter der Schnellverbindung zerstört. Genau dieser unauflösbare
+    Widerspruch ist für Leitensteig, Branderweg und Sebastianstraße vorprogrammiert."
+    <span class="quelle">Aus unserer Stellungnahme — Quellen siehe unten</span>
+  </div>
+
+  <h3>Was Oberhaching mit Tennenlohe zu tun hat</h3>
+  <ul>
+    <li><strong>Die Gemeinde wollte die Route selbst.</strong> Oberhaching gilt als fahrradfreundlich und hat sich für die Radhauptverbindung eingesetzt — dort kann niemand den Anwohnern vorwerfen, sie wollten das Rad verhindern. Der Konflikt kam trotzdem.</li>
+    <li><strong>Strukturgleiche Konfliktstelle:</strong> Schnellverbindung durch eine Wohnstraße, an Gastronomie vorbei — wie an Leitensteig, Branderweg und Sebastianstraße.</li>
+    <li><strong>Alle Gegenmaßnahmen scheitern nachweislich:</strong> Tempo 10 wird ignoriert, Appelle verpuffen, Schwellen verursachen Stürze und werden umfahren, Umlaufsperren beenden die Schnellverbindung.</li>
+    <li><strong>Der Widerspruch ist dokumentiert — vom ADFC selbst:</strong> Verkehrsberuhigung zerstört den Charakter der Radhauptverbindung. Entweder schnell (dann gefährlich fürs Wohnumfeld) oder verträglich (dann kein Radschnellweg mehr). Beides zugleich gibt es nicht.</li>
+    <li><strong>Der soziale Frieden ist das eigentliche Opfer:</strong> Von Müsliriegeln bis Reißzwecken — der Konflikt zwischen Anwohnern und Radverkehr wurde durch die Trassenwahl erst erzeugt.</li>
+  </ul>
+
+  <h3>Quellen zum Fall Oberhaching</h3>
+  <table>
+    <tr><th>Quelle</th><th>Inhalt</th></tr>
+    <tr>
+      <td><a href="https://muenchen.adfc.de/pressemitteilung/adfc-muenchen-warnt-vor-gefaehrlichen-fahrbahnschwellen-vor-kugleralm" rel="noopener" target="_blank">ADFC München, Pressemitteilung 2025</a> (<a href="https://muenchen.adfc.de/fileadmin/Gliederungen/Pedale/muenchen/user_upload/Pressemitteilungen/2025/ADFC_Muenchen_warnt_vor_Schwellen_Oberhaching_docx.docx.pdf" rel="noopener" target="_blank">PDF</a>)</td>
+      <td>„ADFC München warnt vor gefährlichen Fahrbahnschwellen vor Kugler Alm" — erhöhte Gefährdung, Widerspruch zur Radhauptverbindung</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.bayerische-staatszeitung.de/staatszeitung/kommunales/detailansicht-kommunales/artikel/der-kampf-um-den-asphalt.html" rel="noopener" target="_blank">Bayerische Staatszeitung, 11.07.2025</a></td>
+      <td>„Zoff um Radschnellweg: Der Kampf um den Asphalt" — Chronik des Konflikts inkl. Reißzwecken-Eskalation</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.landkreis-muenchen.de/themen/mobilitaet/radverkehr/aktuelle-radprojekte/radschnellverbindungen/" rel="noopener" target="_blank">Landkreis München: Radschnellverbindungen</a></td>
+      <td>Hintergrund zum Radschnellweg-Prüfprogramm und den Korridoren</td>
+    </tr>
+    <tr>
+      <td>Weitere Berichterstattung (Bezahlschranke)</td>
+      <td>SZ 27.11.2025 („Weitere Bodenschwellen"), SZ 15.04.2026 (drei zusätzliche Schwellen), Merkur 14.04.2026 („Bremsschwellen-Flop"), Abendzeitung 18.03. und 02.07.2026 (Umlaufsperren), tz 05.12.2025 (Polizei-Bedenken, Unfälle)</td>
+    </tr>
+  </table>
+
+  <h2 id="markt-schwaben">Fall Markt Schwaben: Engstellen stoppen den Radschnellweg — die Förderung fällt weg</h2>
+  <p>
+    Sternförmig soll das künftige Radschnellwegnetz die umliegenden Landkreise an München anbinden.
+    Doch der Stern hat einen Zacken verloren: Der Radschnellweg nach Markt Schwaben kann
+    voraussichtlich nicht realisiert werden — das berichtet der
+    <a href="https://www.merkur.de/lokales/ebersberg/markt-schwaben-ort29035/engstellen-stoppen-radschnellweg-muenchen-markt-schwaben-foerderung-faellt-weg-94511262.html"
+      rel="noopener" target="_blank">Münchner Merkur am 25.09.2026</a>.
+  </p>
+
+  <div class="statband">
+    <Stat zahl="&lt; 50 %" label="der Radschnellweg-Kriterien erfüllt die Trasse nach aktuellem Regelwerk" signal={true} />
+    <Stat zahl="75 %" label="der Baukosten hätte der Bund getragen — diese Förderung entfällt" />
+    <Stat zahl="123.000 €" label="Planungskosten sind beim Landratsamt Ebersberg bereits angefallen" />
+    <Stat zahl="seit 2018" label="liefen die Planungen; eine Machbarkeitsstudie kürte die Route zur Vorzugsvariante" />
+  </div>
+
+  <h3>Was passiert ist</h3>
+  <p>
+    Die Planungen für die Route von München über Aschheim, Feldkirchen und Kirchheim liefen seit 2018;
+    eine Machbarkeitsstudie hatte den Weg als Vorzugsvariante hervorgebracht. Im Landkreis Ebersberg
+    sollte die Trasse auf acht Kilometern über Poing-Grub und Poing bis zum Bahnhof Markt Schwaben führen.
+    Dann die Ernüchterung: „Das Regelwerk und die Anforderungen an Radschnellverbindungen wurden seit
+    2018 angepasst und konkretisiert", erklärt Martin Riedl, Radwegsbeauftragter im Landratsamt
+    Ebersberg, gegenüber dem Merkur. Durch die neuen Richtlinien erfülle die Trasse
+    <strong>weniger als 50 Prozent der Kriterien</strong> eines Radschnellweges —
+    <strong>„hauptsächlich wegen innerörtlicher Engstellen"</strong>. Dadurch falle die Förderung durch
+    den Bund weg: 75 Prozent der Baukosten hätte der Bund getragen, die restlichen 25 Prozent wären vom
+    Freistaat geflossen. Der Umwelt-, Landwirtschafts- und Verkehrsausschuss des Kreistags berät Ende
+    September 2026 darüber, das Projekt vorerst zu beerdigen.
+  </p>
+  <p>
+    Poings Bürgermeister Thomas Stark räumt im Artikel ein, ihm sei „schon auch bewusst" gewesen, dass
+    aus baulichen Gründen nicht auf allen Abschnitten die erforderliche <strong>Breite von vier
+    Metern</strong> umgesetzt werden kann — wie in der <strong>Gruber Straße in Poing</strong>, wo
+    stattdessen ein normaler Radweg errichtet wurde. Auch in Markt Schwaben wäre die Umsetzung
+    insbesondere <strong>an der Bahnstrecke</strong> schwierig gewesen. Eine Weiterverfolgung als
+    normaler Radweg wäre möglich, mit 75 Prozent Zuschuss vom Freistaat — „aber wer soll dann die
+    restlichen 25 Prozent übernehmen?", fragt Riedl angesichts der Haushaltssperre des Landkreises.
+  </p>
+
+  <h3>Die Engstellen auf der Karte</h3>
+  <ul>
+    <li><a href="https://www.google.com/maps/search/?api=1&query=Gruber+Stra%C3%9Fe%2C+85586+Poing" rel="noopener" target="_blank">Gruber Straße, Poing (Google Maps) →</a> — Ortsdurchfahrt, in der die vier Meter Breite laut Bürgermeister Stark baulich nicht umsetzbar sind</li>
+    <li><a href="https://www.google.com/maps/search/?api=1&query=Bahnhof+Markt+Schwaben" rel="noopener" target="_blank">Bahnhofsbereich Markt Schwaben (Google Maps) →</a> — enger Zulauf entlang der Bahnstrecke zum S-Bahnhof</li>
+    <li><a href="https://buergerinfo.lra-ebe.de/getfile.asp?id=67528&type=do" rel="noopener" target="_blank">Offizieller Trassenplan (PDF, Anlage 3 zur Kreistagsvorlage) →</a> — der geplante Verlauf im Landkreis Ebersberg</li>
+  </ul>
+
+  <h3>Was Markt Schwaben mit Tennenlohe zu tun hat</h3>
+  <ul>
+    <li><strong>Der Fördergeber prüft den Standard wirklich.</strong> Unterschreitet eine Trasse die Kriterien auf zu großen Streckenanteilen, ist die Bundesförderung weg — das ist in Markt Schwaben nicht Theorie, sondern gerade geschehen.</li>
+    <li><strong>Ältere Bewertungen sind überholt.</strong> Die Münchner Beschlussvorlage von 2022 attestierte der Gesamttrasse noch 91 Prozent Standardeinhaltung; nach dem aktuellen Regelwerk sind es weniger als 50. Auch für Erlangen stellt sich die Frage, nach welchem Stand die Trasse durch Tennenlohe bewertet wurde.</li>
+    <li><strong>Innerörtliche Engstellen sind der Knackpunkt</strong> — in Poing scheiterte es an einer Ortsdurchfahrt. Die geplante Führung durch Leitensteig, Branderweg und Sebastianstraße weist dieselben Merkmale auf: Wohnbebauung, Ausfahrten, Parkdruck — auf ganzer Länge.</li>
+    <li><strong>Das Kostenrisiko trägt die Kommune.</strong> Entfällt die Förderung, bleibt die Frage nach dem Eigenanteil — im Landkreis Ebersberg ist sie angesichts Haushaltssperre offen, und 123.000 Euro Planungskosten sind bereits verloren.</li>
+  </ul>
+
+  <h3>Quellen zum Fall Markt Schwaben</h3>
+  <table>
+    <tr><th>Quelle</th><th>Inhalt</th></tr>
+    <tr>
+      <td><a href="https://www.merkur.de/lokales/ebersberg/markt-schwaben-ort29035/engstellen-stoppen-radschnellweg-muenchen-markt-schwaben-foerderung-faellt-weg-94511262.html" rel="noopener" target="_blank">Münchner Merkur / Ebersberger Zeitung, 25.09.2026</a></td>
+      <td>„Engstellen stoppen Radschnellweg München–Markt Schwaben: Förderung fällt weg" — Bericht mit den Aussagen von Martin Riedl (Landratsamt) und Bürgermeister Thomas Stark</td>
+    </tr>
+    <tr>
+      <td><a href="https://buergerinfo.lra-ebe.de/vo0050.asp?__kvonr=4947" rel="noopener" target="_blank">Kreistagsvorlage 2022/0688, ULV-Ausschuss LK Ebersberg, 18.05.2022</a></td>
+      <td>Absichtserklärung zur Radschnellwegverbindung; Streckenbeschreibung, Kosten (17,1 Mio. € Vollausbau), Trassenplan als Anlage</td>
+    </tr>
+    <tr>
+      <td><a href="https://risi.muenchen.de/risi/dokument/v/7093968" rel="noopener" target="_blank">RIS München, Sitzungsvorlage 20-26 / V 04418 (2022)</a></td>
+      <td>Kennzahlen der Radschnellverbindungen im Münchner Umland — damals noch 91 % Standardeinhaltung für die Gesamttrasse nach Markt Schwaben</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.bmv.de/SharedDocs/DE/Artikel/StV/Radverkehr/radschnellwege.html" rel="noopener" target="_blank">Bundesministerium für Verkehr: Radschnellwege</a></td>
+      <td>Förderkriterien des Bundes (Breite, Trennung, Prognosebelastung) und Liste der geförderten Projekte — darunter „Nürnberg – Erlangen" und „München – Markt Schwaben"</td>
+    </tr>
+  </table>
+
+  <p>
+    <a class="button" href="/konfliktstellen">Die Konfliktstellen in Tennenlohe →</a>
+    <a class="button signal" href="/behoerden">Unsere Forderungen an Stadt &amp; Regierung →</a>
+  </p>
+
+</Base>
