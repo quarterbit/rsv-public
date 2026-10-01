@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Tagesganglinie: Bürgerzählungen hochgerechnet mit dem amtlichen Stundenprofil</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { margin: 0; padding: 16px; font-family: system-ui, sans-serif; color: #14202b; }
+  h1 { font-size: 19px; margin: 0 0 2px; border-left: 8px solid #c3000f; padding-left: 10px; }
+  .rechen { height: 5px; max-width: 960px; margin: 8px 0 12px;
+    background: repeating-linear-gradient(90deg, #c3000f 0 18px, #ffffff 18px 36px);
+    border: 1px solid #c3000f; border-radius: 2px; }
+  p.sub { font-size: 13.5px; color: #3c4a59; margin: 0 0 12px; max-width: 900px; }
+  select { font-size: 14px; padding: 4px 8px; margin-bottom: 10px; border: 2px solid #0d47a1; border-radius: 4px; }
+  #chart { max-width: 960px; }
+  .hinweis { background: #fff8e1; border: 1px solid #e0c36a; border-radius: 6px; padding: 10px 14px; font-size: 13px; max-width: 900px; }
+  .axis text { font-size: 12.5px; fill: #14202b; }
+  .axis path, .axis line { stroke: #5a6472; }
+  .quelle { font-size: 12px; color: #3c4a59; margin-top: 8px; }
+</style>
+</head>
+<body>
+<h1>Tagesganglinie — Bürgerzählung × amtliches Stundenprofil</h1>
+<div class="rechen"></div>
+<p class="sub">
+  Blau: unsere gemessenen 2-Stunden-Werte (als Rad/h je 15-Minuten-Intervall). Grau: daraus
+  hochgerechneter Tagesverlauf („Ganglinien-Berg") nach dem Ganglinien-Verfahren für
+  Kurzzeitzählungen: Tageswert = Messwert ÷ Tagesanteil des Zeitfensters.
+  <b>Methodischer Hinweis:</b> Für die Potenzialprognose einer Radschnellverbindung ist der
+  BASt-Leitfaden zur Potenzialanalyse und Nutzen-Kosten-Analyse (2019) maßgeblich — nicht das
+  HBS (Handbuch für die Bemessung von Straßenverkehrsanlagen), das auf die Bemessung von
+  Verkehrsanlagen zielt. Unsere Hochrechnung dient allein der Einordnung der Messwerte
+  gegenüber der Förderschwelle von 2.000 Radfahrten/Tag.
+</p>
+<label for="sel">Zählung: </label><select id="sel"></select>
+<div id="chart"></div>
+<div id="fazit" class="quelle"></div>
+
+<h1 style="margin-top:28px">Alle Zählungen: Tageshochrechnung gegen Förderschwelle und Stadt-Prognose</h1>
+<p class="sub">Hochgerechneter Tageswert je Zählung (gleiches Verfahren); rote Linie = 2.000
+Radfahrten/Tag (Förderschwelle der Verwaltungsvereinbarung Radschnellwege); violette Linie =
+bis zu 4.800 Radfahrten/Tag, mit denen die Stadt Erlangen in ihren Planungsunterlagen rechnet —
+bewusst im gleichen Maßstab dargestellt.</p>
+<div id="uebersicht"></div>
+
+<script src="/vendor/d3/d3.v7.min.js"></script>
+<script src="zaehlungen-daten.js"></script>
+<script src="nbg-stundenprofil.js"></script>
+<script>
+// Typisches Werktagsprofil (städtischer Radverkehr, Doppelspitze) als dokumentierte Näherung.
+const FALLBACK_PROFIL = {
+  quelle: 'typisches städtisches Werktagsprofil — dokumentierte Näherung',
+  vorlaeufig: true,
+  anteile: [0.003, 0.002, 0.001, 0.001, 0.002, 0.008, 0.030, 0.075, 0.085, 0.050,
+            0.050, 0.045, 0.055, 0.055, 0.055, 0.065, 0.080, 0.095, 0.080, 0.060,
+            0.040, 0.030, 0.022, 0.011]
+};
+const PROFIL = (typeof STUNDENPROFIL !== 'undefined' && STUNDENPROFIL) ? STUNDENPROFIL : FALLBACK_PROFIL;
+
+const sel = d3.select('#sel');
+sel.append('option').attr('value', 'alle').text('Gemeinsame Ganglinie — alle Zählungen kombiniert');
+sel.selectAll('option.einzel').data(ZAEHLUNGEN).join('option')
+  .attr('class', 'einzel')
+  .attr('value', (d, i) => i)
+  .text(d => `${d.ort} — ${d.datum}, ${d.uhrzeit}`);
+sel.on('change', () => zeichne(sel.property('value')));
+
+function startStunde(uhrzeit) {
+  const m = uhrzeit.match(/(\d{1,2})[:.](\d{2})/);
+  return m ? (+m[1] + (+m[2]) / 60) : null;
+}
+
+function fensterAnteil(arr, t0, dauer) {
+  let s = 0;
+  for (let h = 0; h < 24; h++) {
+    s += arr[h] * Math.max(0, Math.min(h + 1, t0 + dauer) - Math.max(h, t0));
+  }
+  return s;
+}
+
+// Gemeinsame Ganglinie: Mittel aller Zählungen je 15-min-Slot + gemeinsamer Ratio-Schätzer
+function gemeinsameDaten() {
+  const slots = new Map();
+  ZAEHLUNGEN.forEach(z => {
+    const t0 = startStunde(z.uhrzeit);
+    if (t0 === null) return;
+    z.intervalle.forEach((iv, i) => {
+      const s = Math.round((t0 + i * 0.25) * 4);
+      if (!slots.has(s)) slots.set(s, []);
+      slots.get(s).push((iv.radErl + iv.radNbg) * 4);
+    });
+  });
+  const mess = Array.from(slots, ([s, w]) => ({
+    von: s / 4, bis: s / 4 + 0.25, radH: Math.round(d3.mean(w)), n: w.length
+  })).sort((a, b) => a.von - b.von);
+  const sumFahrten = d3.sum(mess, m => m.radH / 4);
+  const sumAnteile = d3.sum(mess, m => (PROFIL.anteile[Math.floor(m.von)] ?? 0) / 4);
+  return { mess, tagesschaetzung: sumFahrten / sumAnteile, rad: Math.round(sumFahrten) };
+}
+
+function zeichne(idx) {
+  let mess, tagesschaetzung = null, kurve = null, band = null, beschreibung;
+  if (idx === 'alle') {
+    const g = gemeinsameDaten();
+    mess = g.mess;
+    tagesschaetzung = g.tagesschaetzung;
+    beschreibung = `${ZAEHLUNGEN.length} Zählungen kombiniert (Mittel je 15-min-Fenster, ${g.rad} Fahrten in Summe der Messfenster)`;
+  } else {
+    const z = ZAEHLUNGEN[+idx];
+    const t0 = startStunde(z.uhrzeit);
+    mess = z.intervalle.map((iv, i) => ({
+      von: t0 + i * 0.25, bis: t0 + (i + 1) * 0.25, radH: (iv.radErl + iv.radNbg) * 4, n: 1
+    }));
+    beschreibung = `Messung ${z.rad} in 2 h`;
+    if (PROFIL && t0 !== null) {
+      tagesschaetzung = z.rad / fensterAnteil(PROFIL.anteile, t0, 2);
+      if (PROFIL.bandLow && PROFIL.bandHigh) {
+        band = PROFIL.anteile.map((p, h) => ({
+          h,
+          lo: PROFIL.bandLow[h]  / fensterAnteil(PROFIL.bandLow, t0, 2)  * z.rad,
+          hi: PROFIL.bandHigh[h] / fensterAnteil(PROFIL.bandHigh, t0, 2) * z.rad
+        }));
+      }
+    }
+  }
+  if (tagesschaetzung) {
+    kurve = PROFIL.anteile.map((p, h) => ({ h, v: p * tagesschaetzung }));
+  }
+  d3.select('#chart').selectAll('*').remove();
+
+  const W = 960, H = 420, M = { t: 16, r: 20, b: 40, l: 52 };
+  const svg = d3.select('#chart').append('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%');
+  const x = d3.scaleLinear().domain([0, 24]).range([M.l, W - M.r]);
+
+  const yMax = Math.max(d3.max(mess, d => d.radH) || 0, band ? d3.max(band, d => d.hi) : 0,
+    kurve ? d3.max(kurve, d => d.v) : 0, 10) * 1.15;
+  const y = d3.scaleLinear().domain([0, yMax]).range([H - M.b, M.t]);
+
+  svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - M.b})`)
+    .call(d3.axisBottom(x).ticks(12).tickFormat(h => `${h}:00`));
+  svg.append('g').attr('class', 'axis').attr('transform', `translate(${M.l},0)`)
+    .call(d3.axisLeft(y));
+  svg.append('text').attr('x', M.l).attr('y', 12).attr('font-size', 11).attr('fill', '#5a6472')
+    .text('Radfahrten pro Stunde (Querschnitt)');
+
+  if (band) {
+    svg.append('path').datum(band)
+      .attr('fill', '#9e9e9e').attr('opacity', 0.25)
+      .attr('d', d3.area().curve(d3.curveMonotoneX)
+        .x(d => x(d.h + 0.5)).y0(d => y(d.lo)).y1(d => y(d.hi)));
+  }
+  if (kurve) {
+    svg.append('path').datum(kurve)
+      .attr('fill', 'none').attr('stroke', '#616161').attr('stroke-width', 2)
+      .attr('stroke-dasharray', PROFIL.vorlaeufig ? '6 4' : null)
+      .attr('d', d3.line().curve(d3.curveMonotoneX).x(d => x(d.h + 0.5)).y(d => y(d.v)));
+    const spitze = kurve.reduce((a, b) => b.v > a.v ? b : a);
+    svg.append('text').attr('x', x(spitze.h + 0.7)).attr('y', y(spitze.v) - 6)
+      .attr('font-size', 12).attr('fill', '#616161')
+      .text(`Hochgerechneter Tagesverlauf (≈ ${Math.round(tagesschaetzung)}/Tag)`);
+    document.getElementById('fazit').textContent =
+      `Hochrechnung${PROFIL.vorlaeufig ? ' (vorläufig)' : ''}: ca. ${Math.round(tagesschaetzung)} ` +
+      `Radfahrten am Tag (${beschreibung} ÷ Tagesanteil der Zeitfenster, ` +
+      `Profil: ${PROFIL.quelle}). Zur Einordnung: Die Bundesförderung verlangt 2.000 Radfahrten/Tag im Mittel.`;
+  } else {
+    document.getElementById('fazit').textContent = '';
+  }
+
+  // Messbalken (über dem Band)
+  svg.selectAll('rect.mess').data(mess).join('rect')
+    .attr('class', 'mess')
+    .attr('x', d => x(d.von) + 1).attr('width', d => x(d.bis) - x(d.von) - 2)
+    .attr('y', d => y(d.radH)).attr('height', d => y(0) - y(d.radH))
+    .attr('fill', '#0d47a1').attr('opacity', 0.9)
+    .append('title').text(d => `${d.radH} Rad/h${d.n > 1 ? ` (Mittel aus ${d.n} Zählungen)` : ''}`);
+}
+
+zeichne('alle');
+
+// Übersicht: Tageshochrechnung aller Zählungen vs. 2.000er-Schwelle
+(function uebersicht() {
+  const daten = ZAEHLUNGEN.map(z => {
+    const t0 = startStunde(z.uhrzeit);
+    const p = t0 === null ? null : fensterAnteil(PROFIL.anteile, t0, 2);
+    return { label: `${z.ort} (${z.datum}, ${z.uhrzeit})`, tag: p ? z.rad / p : null };
+  }).filter(d => d.tag !== null);
+
+  const W = 960, H = 60 + daten.length * 52, M = { t: 10, r: 60, b: 36, l: 10 };
+  const xMax = Math.max(5100, d3.max(daten, d => d.tag) * 1.1);
+  const x = d3.scaleLinear().domain([0, xMax]).range([M.l, W - M.r]);
+  const y = d3.scaleBand().domain(daten.map(d => d.label)).range([M.t, H - M.b]).padding(0.35);
+
+  const svg = d3.select('#uebersicht').append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%');
+  svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - M.b})`)
+    .call(d3.axisBottom(x).ticks(8));
+
+  svg.selectAll('rect.tag').data(daten).join('rect')
+    .attr('x', x(0)).attr('y', d => y(d.label))
+    .attr('width', d => x(d.tag) - x(0)).attr('height', y.bandwidth())
+    .attr('fill', '#0d47a1').attr('opacity', 0.9);
+  svg.selectAll('text.lbl').data(daten).join('text')
+    .attr('x', x(0) + 6).attr('y', d => y(d.label) + y.bandwidth() / 2 - 4)
+    .attr('font-size', 12).attr('fill', '#fff').attr('dominant-baseline', 'middle')
+    .text(d => d.label);
+  svg.selectAll('text.val').data(daten).join('text')
+    .attr('x', d => x(d.tag) + 6).attr('y', d => y(d.label) + y.bandwidth() / 2)
+    .attr('font-size', 12).attr('font-weight', 700).attr('dominant-baseline', 'middle')
+    .text(d => `≈ ${Math.round(d.tag)}/Tag`);
+
+  svg.append('line').attr('x1', x(2000)).attr('x2', x(2000)).attr('y1', M.t).attr('y2', H - M.b)
+    .attr('stroke', '#c3000f').attr('stroke-width', 3).attr('stroke-dasharray', '7 5');
+  svg.append('text').attr('x', x(2000) + 5).attr('y', M.t + 12).attr('font-size', 13).attr('font-weight', 700)
+    .attr('fill', '#c3000f').text('Förderschwelle 2.000/Tag');
+
+  svg.append('line').attr('x1', x(4800)).attr('x2', x(4800)).attr('y1', M.t).attr('y2', H - M.b)
+    .attr('stroke', '#6a1b9a').attr('stroke-width', 3).attr('stroke-dasharray', '2 4');
+  svg.append('text').attr('x', x(4800) - 5).attr('y', M.t + 12).attr('font-size', 13).attr('font-weight', 700)
+    .attr('text-anchor', 'end').attr('fill', '#6a1b9a').text('Prognose Stadt Erlangen: bis zu 4.800/Tag');
+})();
+</script>
+</body>
+</html>

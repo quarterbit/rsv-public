@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Bürger-Verkehrszählungen Tennenlohe – Zählpunkte und Messwerte</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+<style>
+  html, body { margin: 0; height: 100%; font-family: system-ui, sans-serif; }
+  #map { height: 100%; }
+  .titlebox {
+    position: absolute; top: 10px; left: 55px; z-index: 1000;
+    background: rgba(255,255,255,.93); padding: 10px 16px; border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4); max-width: 520px;
+  }
+  .titlebox h1 { font-size: 15px; margin: 0 0 4px; padding-right: 20px; }
+  .titlebox p { font-size: 12px; margin: 0; color: #333; }
+  .titlebox .close {
+    position: absolute; top: 6px; right: 8px; border: none; background: none;
+    font-size: 16px; line-height: 1; color: #555; cursor: pointer; padding: 2px;
+  }
+  .titlebox .close:hover { color: #000; }
+  .legend {
+    position: absolute; bottom: 22px; left: 10px; z-index: 1000;
+    background: rgba(255,255,255,.93); padding: 10px 14px; border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4); font-size: 12px; line-height: 1.7;
+  }
+  .zp-icon {
+    background: #1565c0; color: #fff; border: 1.5px solid #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 10px; box-shadow: 0 0 4px rgba(0,0,0,.7);
+  }
+  .leaflet-popup-content { font-size: 13px; }
+  .leaflet-popup-content table { border-collapse: collapse; margin-top: 4px; }
+  .leaflet-popup-content th, .leaflet-popup-content td { border: 1px solid #bbb; padding: 1px 6px; font-size: 11px; text-align: right; }
+  .leaflet-popup-content th:first-child, .leaflet-popup-content td:first-child { text-align: left; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="titlebox" id="titlebox">
+  <button class="close" aria-label="Schließen" onclick="document.getElementById('titlebox').remove()">✕</button>
+  <h1>Bürger-Verkehrszählung Tennenlohe: Zählpunkte und gemessene Werte</h1>
+  <p>Methodisch dokumentierte 2-Stunden-Zählungen nach FGSV/BASt-Methodik — reine Messwerte,
+  keine Hochrechnung. Kreisgröße = Radfahrten pro Stunde. Marker anklicken für Details.</p>
+</div>
+
+<div class="legend" id="legend">
+  <b>Zählpunkte</b><br>
+  <span id="legend-list">Daten werden geladen …</span>
+</div>
+
+<script src="/vendor/leaflet/leaflet.js"></script>
+<script src="zaehlungen-daten.js"></script>
+<script>
+// Koordinaten je Zählstelle — auf die Straßenmitte gelegt (OSM-Fahrbahn-Vertices)
+const ZAEHLSTELLEN = {
+  'Wormser - Weichselgarten / Reutleser Weg': [49.5426, 11.0282],
+  'ggü Branderweg 10': [49.55053, 11.02955],
+  'Branderweg 7': [49.54995, 11.02886],
+  'Leitensteig 2 / Falknersweg': [49.54682, 11.02681]
+};
+
+const map = L.map('map', { scrollWheelZoom: false }).setView([49.5460, 11.0270], 15);
+map.on('click', () => map.scrollWheelZoom.enable());
+map.on('mouseout', () => map.scrollWheelZoom.disable());
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: 'Karte © OpenStreetMap-Mitwirkende (ODbL)'
+}).addTo(map);
+
+// Zählungen je Ort gruppieren
+const proOrt = new Map();
+ZAEHLUNGEN.forEach(z => {
+  if (!proOrt.has(z.ort)) proOrt.set(z.ort, []);
+  proOrt.get(z.ort).push(z);
+});
+
+const unbekannt = [];
+let n = 0;
+proOrt.forEach((liste, ort) => {
+  const pos = ZAEHLSTELLEN[ort];
+  if (!pos) { unbekannt.push(ort); return; }
+  n++;
+  const radProH = Math.max(...liste.map(z => z.rad / 2));
+  const d = Math.max(14, Math.min(32, 12 + radProH * 0.18));
+  const icon = L.divIcon({ className: '', iconSize: [d, d], iconAnchor: [d/2, d/2],
+    html: `<div class="zp-icon" style="width:${d}px;height:${d}px"></div>` });
+
+  let html = `<b>${ort}</b>`;
+  liste.forEach(z => {
+    html += `<br><br><b>${z.datum}, ${z.uhrzeit}</b> · ${z.wetter || ''}` +
+      `<br>Rad: <b>${z.rad}</b> in 2 h (${(z.rad/2).toFixed(1)}/h, davon ${z.pedelec} Pedelec, ${z.lastenrad} Lastenrad)` +
+      `<br>Kfz: ${z.kfz} · Fuß: ${z.fuss}` +
+      '<table><tr><th>Intervall</th><th>Rad → ER</th><th>Rad → N</th><th>Kfz</th></tr>' +
+      z.intervalle.map(iv => `<tr><td>${iv.t}</td><td>${iv.radErl}</td><td>${iv.radNbg}</td><td>${iv.kfzErl + iv.kfzNbg}</td></tr>`).join('') +
+      '</table>';
+  });
+  L.marker(pos, { icon }).bindPopup(html, { maxWidth: 340 }).addTo(map);
+});
+
+document.getElementById('legend-list').innerHTML =
+  `${n} Zählstelle(n), ${ZAEHLUNGEN.length} Zählung(en)` +
+  (unbekannt.length ? `<br><span style="color:#b71c1c">Ohne Koordinaten: ${unbekannt.join('; ')}</span>` : '');
+</script>
+</body>
+</html>

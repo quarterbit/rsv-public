@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Methodik: So entstehen unsere Zähldaten-Auswertungen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { margin: 0; padding: 16px; font-family: system-ui, sans-serif; color: #1c2733; }
+  h1 { font-size: 18px; margin: 0 0 6px; }
+  p.sub { font-size: 13px; color: #5a6472; margin: 0 0 12px; max-width: 920px; }
+  #diagramm { max-width: 1100px; }
+  .quelle { font-size: 12px; color: #5a6472; margin-top: 10px; max-width: 920px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<h1>Methodik: Der Weg der Daten — von der Strichliste zum Diagramm</h1>
+<p class="sub">
+  Volle Transparenz: Dieses Schaubild zeigt jeden Schritt von der Papier-Zählung bis zur
+  Auswertung. Weiß = Rohdaten und Rechenschritte, Rot = Schätz- und Übergabeschritte,
+  Blau = veröffentlichte Daten und Diagramme.
+</p>
+<pre id="diagramm" class="mermaid">
+flowchart TB
+    subgraph ERFASSUNG["📋 Erfassung"]
+        PAPIER["Papier-Zählprotokolle<br>2h-Zählung, 15-min-Intervalle<br>nach FGSV/BASt-Methodik"]
+        XLSM["Digitale Erfassung<br>(Excel, ein Blatt je Zählung)"]
+        NBGCSV["Amtliche Dauerzählstelle<br>Erlanger Straße RZG003 (Nürnberg)<br>Tageswerte seit 06/2023"]
+    end
+
+    subgraph EXPORT["⚙️ Aufbereitung"]
+        EXP1["Export Bürgerzählungen<br>Richtungen normalisiert (→ ER / → N)<br>ohne Namen der Zählenden"]
+        EXP2["Export amtliche Tageswerte"]
+    end
+
+    subgraph DATEN["🗂 Offene Datendateien (einsehbar)"]
+        ZD["zaehlungen-daten.js<br>alle Zählungen, 15-min-Werte"]
+        ND["nbg-tageswerte.js<br>1.195 amtliche Tageswerte"]
+        SP["Typisches städtisches Werktagsprofil<br>(dokumentierte Näherung,<br>im Quelltext einsehbar)"]
+    end
+
+    subgraph RECHNUNG["🧮 Berechnung (im Browser, nachvollziehbar im Quelltext)"]
+        QS["Querschnitt je 15 min:<br>Richtung ER + Richtung N → Rad/h"]
+        SLOT["Je 15-min-Abschnitt:<br>Min–Max und Mittel über alle Zählungen"]
+        RATIO["Ratio-Schätzer:<br>T = Σ gemessene Fahrten ÷<br>Σ Profilanteile der Messfenster"]
+        FILL["Lückenfüllung ungezählter Stunden:<br>Schätzwert(h) = Profilanteil(h) × T"]
+        HOCH["Tageshochrechnung je Zählung:<br>Messung ÷ Tagesanteil des Zeitfensters"]
+        WOCHE["Je Kalenderwoche:<br>Min–Max und Mittel über alle Jahre"]
+    end
+
+    subgraph VIZ["📊 Diagramme"]
+        KARTE["Karte der Zählpunkte"]
+        GANG["Ganglinie: gemeinsame Kurve aller<br>Zählungen + Einzelansicht<br>+ Vergleich 2.000er-Schwelle"]
+        JAHR["Jahresprofil amtliche Zählstelle"]
+        TAG["Tagesprofil Bürgerzählungen<br>Messung blau · Schätzung rot gestrichelt"]
+    end
+
+    PAPIER --> XLSM --> EXP1 --> ZD
+    NBGCSV --> EXP2 --> ND
+    ZD --> QS
+    QS --> KARTE
+    QS --> SLOT --> TAG
+    SLOT --> RATIO --> FILL --> TAG
+    SP -. Profilform .-> RATIO
+    SP -. Profilform .-> FILL
+    ZD --> HOCH --> GANG
+    SP -. Profilform .-> HOCH
+    ND --> WOCHE --> JAHR
+
+    classDef blau fill:#1565c0,stroke:#0d47a1,color:#ffffff
+    classDef franken fill:#d32f2f,stroke:#9a0007,color:#ffffff
+    classDef weiss fill:#ffffff,stroke:#d32f2f,color:#1c2733
+    classDef offen fill:#ffffff,stroke:#1565c0,stroke-dasharray:6 4,color:#5a6472
+
+    class PAPIER,XLSM,NBGCSV weiss
+    class EXP1,EXP2 franken
+    class ZD,ND blau
+    class SP weiss
+    class QS,SLOT,WOCHE,HOCH weiss
+    class RATIO,FILL franken
+    class KARTE,GANG,JAHR,TAG blau
+</pre>
+<div class="quelle">
+  <b>Grundsätze:</b> Gemessene Werte haben immer Vorrang vor Schätzungen und sind in allen
+  Diagrammen klar unterschieden (blau = gemessen, rot gestrichelt = geschätzt). Alle
+  Datendateien sind im Quelltext dieser Seiten offen einsehbar. Die Papier-Originale der
+  Zählprotokolle werden aufbewahrt.
+  <br><br>
+  <b>Methodische Einordnung:</b> Erhebung und Hochrechnung folgen der FGSV-Erhebungsmethodik
+  (EVE — Empfehlungen für Verkehrserhebungen: Kurzzeitzählung in 15-Minuten-Intervallen,
+  Hochrechnung über Tagesganglinien). Unsere Zählungen dokumentieren den <i>Ist-Zustand</i>.
+  Die <i>Prognose</i> des künftigen Radverkehrspotenzials ist Aufgabe des Vorhabenträgers und
+  nach dem BASt-Leitfaden zur Potenzialanalyse und Nutzen-Kosten-Analyse (2019) zu führen —
+  an unseren Messwerten muss sie sich messen lassen.
+  <br><br>
+  Zu den Diagrammen:
+  <a href="/karten/zaehlpunkte.html">Zählpunkte-Karte</a> ·
+  <a href="/karten/ganglinie.html">Ganglinie je Zählung</a> ·
+  <a href="/karten/tagesprofil-buerger.html">Tagesprofil Bürgerzählungen</a> ·
+  <a href="/karten/jahresprofil.html">Jahresprofil amtliche Zählstelle</a>
+</div>
+
+<script src="/vendor/mermaid/mermaid.min.js"></script>
+<script>
+  // htmlLabels:false => SVG-Text, Knoten passen sich der Textbreite an (kein Abschneiden)
+  mermaid.initialize({ startOnLoad: true, securityLevel: 'strict', theme: 'neutral',
+    flowchart: { htmlLabels: false } });
+</script>
+
+<h1 style="margin-top:32px">Der Datenfluss als Sankey-Diagramm</h1>
+<div class="rechen2" style="height:5px;max-width:1100px;margin:8px 0 12px;background:repeating-linear-gradient(90deg,#c3000f 0 18px,#ffffff 18px 36px);border:1px solid #c3000f;border-radius:2px"></div>
+<p class="sub">
+  Dieselben Wege, als Fluss gelesen: von den Rohdaten (links) über Aufbereitung und Berechnung
+  bis zu den Diagrammen (rechts). Grau = Rohdaten und Messrechnung, Rot = Export- und
+  Schätzschritte, Blau = veröffentlichte Daten und Diagramme. Mit der Maus über Flüsse und
+  Knoten fahren für Details.
+</p>
+<div id="sankey" style="max-width:1100px"></div>
+
+<script src="/vendor/d3/d3.v7.min.js"></script>
+<script src="/vendor/d3/d3-sankey.min.js"></script>
+<script>
+(function () {
+  const C = { roh: '#78909c', exp: '#c3000f', dat: '#1565c0', calc: '#546e7a', viz: '#0d47a1' };
+  const nodes = [
+    { id: 'papier',  name: 'Papier-Zählprotokolle', detail: '7 Zählungen, 15-min-Intervalle, FGSV-Methodik', c: C.roh },
+    { id: 'excel',   name: 'Digitale Erfassung', detail: 'Excel, ein Blatt je Zählung', c: C.roh },
+    { id: 'expB',    name: 'Export', detail: 'anonymisiert: Richtungen normalisiert, ohne Namen der Zählenden', c: C.exp },
+    { id: 'zd',      name: 'zaehlungen-daten.js', detail: 'offene Datendatei, im Quelltext einsehbar', c: C.dat },
+    { id: 'nbg',     name: 'Amtliche Zählstelle RZG003', detail: 'Erlanger Straße Nürnberg, CSV-Tageswerte seit 06/2023', c: C.roh },
+    { id: 'expN',    name: 'Export Tageswerte', detail: 'CSV zu JSON je Jahr', c: C.exp },
+    { id: 'nd',      name: 'nbg-tageswerte.js', detail: '1.195 amtliche Tageswerte, offen einsehbar', c: C.dat },
+    { id: 'profil',  name: 'Werktagsprofil', detail: 'typisches städtisches Tagesprofil — dokumentierte Näherung', c: C.roh },
+    { id: 'mess',    name: 'Messrechnung', detail: 'Querschnitt je 15 min, Min–Max und Mittel über Zählungen', c: C.calc },
+    { id: 'schaetz', name: 'Schätzung', detail: 'Ratio-Schätzer, Lückenfüllung, Tageshochrechnung', c: C.exp },
+    { id: 'woche',   name: 'Wochenstatistik', detail: 'Min–Max und Mittel je Kalenderwoche über alle Jahre', c: C.calc },
+    { id: 'karte',   name: 'Karte der Zählpunkte', detail: 'Leaflet, Messwerte je Zählstelle', c: C.viz },
+    { id: 'gang',    name: 'Ganglinie + Schwellen-Vergleich', detail: 'Hochrechnung vs. 2.000er-Förderschwelle und Stadt-Prognose', c: C.viz },
+    { id: 'tag',     name: 'Tagesprofil Bürgerzählungen', detail: 'Messung blau, Schätzung rot gestrichelt', c: C.viz },
+    { id: 'jahr',    name: 'Jahresprofil amtl. Zählstelle', detail: 'Daten-Gebirge übers Jahr', c: C.viz }
+  ];
+  const links = [
+    { source: 'papier', target: 'excel', value: 4, t: '7 Zählprotokolle, 15-min-Intervalle' },
+    { source: 'excel', target: 'expB', value: 4, t: 'ohne Namen der Zählenden' },
+    { source: 'expB', target: 'zd', value: 4, t: 'offene Datendatei' },
+    { source: 'zd', target: 'mess', value: 4, t: 'Rad/Kfz/Fuß je 15 min' },
+    { source: 'mess', target: 'karte', value: 1.2, t: 'Messwerte je Zählstelle' },
+    { source: 'mess', target: 'tag', value: 1.6, t: 'Blaue Linie + graues Band' },
+    { source: 'mess', target: 'schaetz', value: 1.2, t: 'Eingang für Schätzer' },
+    { source: 'profil', target: 'schaetz', value: 1, t: 'Profilform (Näherung)' },
+    { source: 'schaetz', target: 'tag', value: 1.1, t: 'Rot gestrichelte Schätzlinie' },
+    { source: 'schaetz', target: 'gang', value: 1.1, t: 'Tageshochrechnung je Zählung' },
+    { source: 'nbg', target: 'expN', value: 3, t: '1.195 Tageswerte 2023–2026' },
+    { source: 'expN', target: 'nd', value: 3, t: 'offene Datendatei' },
+    { source: 'nd', target: 'woche', value: 3, t: 'Tageswerte je Kalenderwoche' },
+    { source: 'woche', target: 'jahr', value: 3, t: 'Daten-Gebirge übers Jahr' }
+  ];
+
+  const W = 1100, H = 480;
+  const svg = d3.select('#sankey').append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%');
+  const sankey = d3.sankey()
+    .nodeId(d => d.id)
+    .nodeWidth(14).nodePadding(22)
+    .extent([[1, 10], [W - 1, H - 10]]);
+  const graph = sankey({ nodes: nodes.map(d => ({ ...d })), links: links.map(d => ({ ...d })) });
+
+  svg.append('g').selectAll('path').data(graph.links).join('path')
+    .attr('d', d3.sankeyLinkHorizontal())
+    .attr('fill', 'none')
+    .attr('stroke', d => d.target.c).attr('stroke-opacity', 0.3)
+    .attr('stroke-width', d => Math.max(2, d.width))
+    .on('mouseover', function () { d3.select(this).attr('stroke-opacity', 0.55); })
+    .on('mouseout', function () { d3.select(this).attr('stroke-opacity', 0.3); })
+    .append('title').text(d => `${d.source.name} → ${d.target.name}\n${d.t}`);
+
+  const node = svg.append('g').selectAll('g').data(graph.nodes).join('g');
+  node.append('rect')
+    .attr('x', d => d.x0).attr('y', d => d.y0)
+    .attr('width', d => d.x1 - d.x0).attr('height', d => Math.max(4, d.y1 - d.y0))
+    .attr('fill', d => d.c).attr('rx', 2)
+    .append('title').text(d => `${d.name}\n${d.detail}`);
+  node.append('text')
+    .attr('x', d => d.sourceLinks.length === 0 ? d.x0 - 7 : d.x1 + 7)
+    .attr('y', d => (d.y0 + d.y1) / 2)
+    .attr('dominant-baseline', 'middle')
+    .attr('text-anchor', d => d.sourceLinks.length === 0 ? 'end' : 'start')
+    .attr('font-size', 13).attr('font-weight', 600).attr('fill', '#14202b')
+    .text(d => d.name);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Auswertung der Bürger-Verkehrszählungen" aktiv="auswertung"
+  description="Ergebnisse der Bürger-Verkehrszählungen in Tennenlohe: Zählpunkte, Tagesprofile und Vergleich mit der amtlichen Dauerzählstelle — nur aggregierte, anonyme Daten.">
+
+  <section class="hero">
+    <p class="kicker">Bürger-Verkehrszählung Tennenlohe · Ergebnisse</p>
+    <h2>Die Zählergebnisse: gemessen, dokumentiert, nachvollziehbar</h2>
+    <p class="lead">
+      Hier veröffentlichen wir alle methodisch dokumentierten 2-Stunden-Zählungen der
+      Bürgerinitiative — als Karte, Tagesprofil und im Vergleich mit der amtlichen
+      Dauerzählstelle. Es werden ausschließlich <strong>aggregierte Zähldaten</strong>
+      veröffentlicht (Ort, Datum, Zeitfenster, Wetter, Stückzahlen je 15-Minuten-Intervall);
+      die Namen der Zählenden bleiben grundsätzlich unveröffentlicht. Die unterschriebenen
+      Papier-Originale werden für eine behördliche Prüfung aufbewahrt.
+    </p>
+  </section>
+
+  <h2>Wo gezählt wurde — und was gemessen wurde</h2>
+  <figure style="margin:1rem 0;">
+    <iframe src="/karten/zaehlpunkte.html"
+      title="Karte der Zählpunkte der Bürger-Verkehrszählung Tennenlohe mit gemessenen Werten"
+      style="width:100%; height:58vh; min-height:380px; border:1px solid #ccc; border-radius:8px;" loading="lazy"></iframe>
+    <figcaption style="font-size:0.85rem; color:#5a6472;">
+      Jeder Kreis eine Zählstelle; die Zahl zeigt die höchste gemessene Radverkehrsstärke
+      (Rad/h). Marker anklicken für alle Zählungen samt 15-Minuten-Intervallen.
+      <a href="/karten/zaehlpunkte.html" target="_blank" rel="noopener">Im Vollbild öffnen →</a>
+    </figcaption>
+  </figure>
+
+  <h2>Das Tagesprofil unserer Zählungen</h2>
+  <figure style="margin:1rem 0;">
+    <iframe src="/karten/tagesprofil-buerger.html"
+      title="Tagesprofil der Bürgerzählungen: gemessene Radverkehrsstärke und Profilschätzung"
+      style="width:100%; height:78vh; min-height:520px; border:1px solid #ccc; border-radius:8px;" loading="lazy"></iframe>
+    <figcaption style="font-size:0.85rem; color:#5a6472;">
+      Blau = gemessen (mit Spannweite), rot gestrichelt = Schätzung für noch ungezählte
+      Stunden auf Basis des Tagesprofils — Berechnung unter dem Diagramm offen dargelegt.
+      <a href="/karten/tagesprofil-buerger.html" target="_blank" rel="noopener">Im Vollbild öffnen →</a>
+    </figcaption>
+  </figure>
+
+  <h2>Einzelauswertung und Vergleich mit der Förderschwelle</h2>
+  <figure style="margin:1rem 0;">
+    <iframe src="/karten/ganglinie.html"
+      title="Ganglinie je Zählung mit Tageshochrechnung gegen die Förderschwelle von 2.000 Radfahrten pro Tag"
+      style="width:100%; height:85vh; min-height:600px; border:1px solid #ccc; border-radius:8px;" loading="lazy"></iframe>
+    <figcaption style="font-size:0.85rem; color:#5a6472;">
+      Jede Zählung einzeln, hochgerechnet auf den Tag — gegen die rote Linie der
+      Bundesförderschwelle (2.000 Radfahrten/Tag).
+      <a href="/karten/ganglinie.html" target="_blank" rel="noopener">Im Vollbild öffnen →</a>
+    </figcaption>
+  </figure>
+
+  <h2>Zur Einordnung: das Jahresprofil der amtlichen Zählstelle</h2>
+  <figure style="margin:1rem 0;">
+    <iframe src="/karten/jahresprofil.html"
+      title="Jahresprofil der amtlichen Dauerzählstelle Erlanger Straße Nürnberg"
+      style="width:100%; height:75vh; min-height:520px; border:1px solid #ccc; border-radius:8px;" loading="lazy"></iframe>
+    <figcaption style="font-size:0.85rem; color:#5a6472;">
+      1.195 amtliche Tageswerte der Dauerzählstelle Erlanger Straße (Nürnberg, RZG003) auf dem
+      RSV-Korridor — kein einziger Tag über der Förderschwelle.
+      <a href="/karten/jahresprofil.html" target="_blank" rel="noopener">Im Vollbild öffnen →</a>
+    </figcaption>
+  </figure>
+
+  <h2>Einordnung: Was sagt die Bundesempirie zu Wachstumserwartungen?</h2>
+  <p>
+    Prognosen dürfen ambitioniert sein — sie sollten sich aber an den besten verfügbaren Daten
+    messen lassen. Die amtliche Erhebung <strong>„Mobilität in Deutschland 2023"</strong> (BMV)
+    zeigt: Der Radverkehrsanteil liegt bundesweit <strong>stabil bei 11&nbsp;% der Wege</strong>,
+    unverändert gegenüber 2017; gewachsen sind vor allem die Weglängen. Der
+    <strong>Nationale Radverkehrsplan 3.0</strong> formuliert als Ziel eine
+    <strong>Verdopplung der Radverkehrsleistung bis 2030</strong> — die
+    <strong>Zwischenevaluation des Bundesverkehrsministeriums (Juni 2026)</strong> stellt
+    allerdings fest, dass die übergeordneten Ziele bislang nicht erreicht sind.
+  </p>
+  <p>
+    Für Tennenlohe heißt das: Selbst wenn das nationale Verdopplungsziel auf dem Korridor voll
+    erreicht würde, ergäben sich aus den gemessenen ~650 Radfahrten/Tag (amtliche Zählstelle)
+    rund 1.300 — weiterhin deutlich unter der Förderschwelle von 2.000. Die Prognose von bis zu
+    4.800 Radfahrten/Tag setzt dagegen etwa eine <strong>Versiebenfachung</strong> voraus.
+    Eine so weitreichende Annahme verdient eine offengelegte, nachvollziehbare Datengrundlage.
+    <em>(Quellen:
+    <a href="https://www.mobilitaet-in-deutschland.de/pdf/MiD2023_Ergebnisbericht.pdf" rel="noopener" target="_blank">MiD 2023 Ergebnisbericht (PDF)</a>;
+    <a href="https://www.bmv.de/SharedDocs/DE/Artikel/StV/Radverkehr/nationaler-radverkehrsplan-3-0.html" rel="noopener" target="_blank">Nationaler Radverkehrsplan 3.0 (BMV)</a>;
+    <a href="https://www.bmv.de/SharedDocs/DE/Anlage/StV/kurzbericht-zur-zwischenevaluation-des-nrvp-3-0.pdf?__blob=publicationFile" rel="noopener" target="_blank">BMV-Zwischenevaluation NRVP 3.0, Juni 2026 (PDF)</a>.)</em>
+  </p>
+
+  <div class="hinweis">
+    <strong>Transparenz &amp; Datenschutz:</strong> Wie die Daten vom Papierprotokoll bis ins
+    Diagramm gelangen, zeigt unsere <a href="/karten/methodik.html">Methodik-Seite mit
+    Daten-Schaubild</a>. Veröffentlicht werden nur aggregierte Zähldaten ohne Personenbezug.
+    Sie möchten ein Zeitfenster übernehmen? <a href="/zaehlung">Hier mitmachen →</a>
+  </div>
+
+</Base>

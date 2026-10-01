@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Tagesprofil der Bürgerzählungen Tennenlohe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { margin: 0; padding: 16px; font-family: system-ui, sans-serif; color: #14202b; }
+  h1 { font-size: 19px; margin: 0 0 2px; border-left: 8px solid #c3000f; padding-left: 10px; }
+  .rechen { height: 5px; max-width: 980px; margin: 8px 0 12px;
+    background: repeating-linear-gradient(90deg, #c3000f 0 18px, #ffffff 18px 36px);
+    border: 1px solid #c3000f; border-radius: 2px; }
+  p.sub { font-size: 13.5px; color: #3c4a59; margin: 0 0 12px; max-width: 920px; }
+  #chart { max-width: 980px; position: relative; }
+  .axis text { font-size: 12.5px; fill: #14202b; }
+  .axis path, .axis line { stroke: #5a6472; }
+  .grid line { stroke: #d4dae1; }
+  .grid path { display: none; }
+  .tooltip {
+    position: absolute; pointer-events: none; display: none;
+    background: #ffffff; border: 2px solid #c3000f; border-radius: 6px;
+    padding: 9px 13px; font-size: 12.5px; line-height: 1.55; box-shadow: 0 3px 10px rgba(0,0,0,.35);
+    z-index: 10; min-width: 230px; color: #14202b;
+  }
+  .quelle { font-size: 12px; color: #3c4a59; margin-top: 8px; max-width: 920px; }
+  .legend { font-size: 13px; margin: 4px 0 0; font-weight: 600; }
+  .legend span { display: inline-block; margin-right: 18px; }
+  .sw { display: inline-block; width: 22px; height: 11px; vertical-align: middle; margin-right: 5px; border-radius: 2px; }
+</style>
+</head>
+<body>
+<h1>Das Daten-Gebirge der Bürgerzählungen: Rad-, Kfz- und Fußverkehr im Tagesverlauf</h1>
+<div class="rechen"></div>
+<p class="sub">
+  Alle methodisch dokumentierten 2-Stunden-Zählungen der Bürgerinitiative, übereinandergelegt:
+  Graues Band = Spannweite (Minimum–Maximum) der gemessenen Radwerte je 15-Minuten-Abschnitt über
+  alle Zählungen; blaue Linie = Mittelwert der Messungen. Die <b style="color:#37474f">anthrazitfarbene
+  Linie</b> zeigt den gleichzeitig gezählten <b>Kfz-Verkehr</b>, die
+  <b style="color:#2e7d32">grüne Linie</b> den <b>Fußverkehr</b> — auf Anwohnerstraßen mit
+  Schulweg, Kirche und Spielplatz sind beide das Konfliktpotenzial zum geplanten
+  Radschnellverkehr. Für noch ungezählte Tagesstunden zeigt
+  die <b style="color:#c3000f">rot gestrichelte Linie</b> eine Schätzung auf Basis des
+  Tagesprofils der amtlichen Dauerzählstelle — Berechnung siehe Kasten unter dem Diagramm.
+  Gemessene Werte haben immer Vorrang und sind klar von der Schätzung unterschieden.
+</p>
+<div class="legend">
+  <span><span class="sw" style="background:#78909c;opacity:.5"></span>Spannweite Rad Min–Max</span>
+  <span><span class="sw" style="background:#0d47a1"></span>Rad — Mittel (gemessen)</span>
+  <span><span class="sw" style="background:#37474f"></span>Kfz — Mittel (gemessen)</span>
+  <span><span class="sw" style="background:#2e7d32"></span>Fuß — Mittel (gemessen)</span>
+  <span><span class="sw" style="background:none;border-top:3px dashed #c3000f;height:0;border-radius:0"></span>Rad — Profil-Schätzung</span>
+</div>
+<div id="chart"><div class="tooltip" id="tt"></div></div>
+<div id="methodik" class="quelle" style="background:#f4f7fb;border:1px solid #c7d6ea;border-radius:6px;padding:10px 14px;margin-top:10px"></div>
+<div class="quelle" id="quelle"></div>
+
+<script src="/vendor/d3/d3.v7.min.js"></script>
+<script src="zaehlungen-daten.js"></script>
+<script src="nbg-stundenprofil.js"></script>
+<script>
+if (typeof d3 === 'undefined' || typeof ZAEHLUNGEN === 'undefined') {
+  document.getElementById('chart').innerHTML =
+    '<div style="background:#fdecea;border:1px solid #c62828;border-radius:6px;padding:12px 16px;font-size:13px;max-width:700px">' +
+    '<b>Diagramm kann nicht geladen werden.</b> Bitte über den Webserver aufrufen, nicht als Datei öffnen.</div>';
+  throw new Error('d3 oder ZAEHLUNGEN nicht geladen');
+}
+
+// Stundenprofil: empirisch (NBG) falls vorhanden, sonst typisches Werktagsprofil
+const FALLBACK_PROFIL = {
+  quelle: 'typisches städtisches Werktagsprofil — dokumentierte Näherung',
+  vorlaeufig: true,
+  anteile: [0.003, 0.002, 0.001, 0.001, 0.002, 0.008, 0.030, 0.075, 0.085, 0.050,
+            0.050, 0.045, 0.055, 0.055, 0.055, 0.065, 0.080, 0.095, 0.080, 0.060,
+            0.040, 0.030, 0.022, 0.011]
+};
+const PROFIL = (typeof STUNDENPROFIL !== 'undefined' && STUNDENPROFIL) ? STUNDENPROFIL : FALLBACK_PROFIL;
+
+function startStunde(uhrzeit) {
+  const m = uhrzeit.match(/(\d{1,2})[:.](\d{2})/);
+  return m ? (+m[1] + (+m[2]) / 60) : null;
+}
+
+// Je 15-min-Slot (0..95): Werte aller Zählungen, die ihn abdecken
+const slots = new Map();
+ZAEHLUNGEN.forEach(z => {
+  const t0 = startStunde(z.uhrzeit);
+  if (t0 === null) return;
+  z.intervalle.forEach((iv, i) => {
+    const s = Math.round((t0 + i * 0.25) * 4);
+    if (!slots.has(s)) slots.set(s, []);
+    slots.get(s).push({ label: `${z.ort} (${z.datum})`, radH: (iv.radErl + iv.radNbg) * 4, kfzH: (iv.kfzErl + iv.kfzNbg) * 4, fussH: (iv.fussErl + iv.fussNbg) * 4 });
+  });
+});
+
+const punkte = Array.from(slots, ([s, werte]) => ({
+  t: s / 4,
+  min: d3.min(werte, w => w.radH), max: d3.max(werte, w => w.radH),
+  mean: d3.mean(werte, w => w.radH), kfzMean: d3.mean(werte, w => w.kfzH), fussMean: d3.mean(werte, w => w.fussH), werte
+})).sort((a, b) => a.t - b.t);
+
+// Zusammenhängende Zeitfenster trennen (Lücken > 15 min nicht verbinden)
+const bloecke = [];
+let akt = [];
+punkte.forEach(p => {
+  if (akt.length && p.t - akt[akt.length - 1].t > 0.26) { bloecke.push(akt); akt = []; }
+  akt.push(p);
+});
+if (akt.length) bloecke.push(akt);
+
+const tMin = 5, tMax = 22;
+
+// Profil-Schätzung: Tagessumme T so skalieren, dass das Profil zu den Messwerten passt
+// (Ratio-Schätzer: T = Summe gemessener Fahrten / Summe der Profilanteile der gemessenen Slots)
+function profilRadH(t) {
+  const h = Math.floor(t);
+  return (PROFIL.anteile[h] ?? 0);
+}
+const sumFahrten = d3.sum(punkte, p => p.mean / 4);
+const sumAnteile = d3.sum(punkte, p => profilRadH(p.t) / 4);
+const T = sumFahrten / sumAnteile;
+const schaetzung = d3.range(tMin, tMax + 0.25, 0.25).map(t => ({ t, v: profilRadH(t) * T }));
+
+const W = 980, H = 460, M = { t: 16, r: 24, b: 40, l: 56 };
+const svg = d3.select('#chart').append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%');
+const x = d3.scaleLinear().domain([tMin, tMax]).range([M.l, W - M.r]);
+const yMax = Math.max(d3.max(punkte, d => d.max), d3.max(schaetzung, d => d.v)) * 1.15;
+const y = d3.scaleLinear().domain([0, yMax]).range([H - M.b, M.t]);
+
+svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - M.b})`)
+  .call(d3.axisBottom(x).ticks(10).tickFormat(h => `${Math.floor(h)}:${h % 1 ? '30' : '00'}`));
+svg.append('g').attr('class', 'grid').attr('transform', `translate(${M.l},0)`)
+  .call(d3.axisLeft(y).tickSize(-(W - M.l - M.r)).tickFormat(''));
+svg.append('g').attr('class', 'axis').attr('transform', `translate(${M.l},0)`).call(d3.axisLeft(y));
+svg.append('text').attr('x', M.l).attr('y', 11).attr('font-size', 12.5).attr('fill', '#14202b')
+  .text('Rad / Kfz / Fuß pro Stunde (Querschnitt, aus 15-min-Intervallen)');
+
+// Profil-Schätzung nur dort zeichnen, wo KEINE Messung vorliegt (Segmente zwischen den Blöcken)
+const gemessen = new Set(punkte.map(p => Math.round(p.t * 4)));
+const segmente = [];
+let seg = [];
+schaetzung.forEach(s => {
+  if (gemessen.has(Math.round(s.t * 4))) {
+    if (seg.length > 1) segmente.push(seg);
+    seg = [];
+  } else {
+    seg.push(s);
+  }
+});
+if (seg.length > 1) segmente.push(seg);
+
+segmente.forEach(s => {
+  svg.append('path').datum(s)
+    .attr('fill', 'none').attr('stroke', '#c3000f').attr('stroke-width', 2.5)
+    .attr('stroke-dasharray', '7 5').attr('opacity', 0.9)
+    .attr('d', d3.line().curve(d3.curveMonotoneX).x(d => x(d.t)).y(d => y(d.v)));
+});
+
+bloecke.forEach(block => {
+  svg.append('path').datum(block)
+    .attr('fill', '#78909c').attr('opacity', 0.45)
+    .attr('d', d3.area().curve(d3.curveMonotoneX).x(d => x(d.t)).y0(d => y(d.min)).y1(d => y(d.max)));
+  svg.append('path').datum(block)
+    .attr('fill', 'none').attr('stroke', '#0d47a1').attr('stroke-width', 3.5)
+    .attr('d', d3.line().curve(d3.curveMonotoneX).x(d => x(d.t)).y(d => y(d.mean)));
+  svg.append('path').datum(block)
+    .attr('fill', 'none').attr('stroke', '#37474f').attr('stroke-width', 2.5)
+    .attr('d', d3.line().curve(d3.curveMonotoneX).x(d => x(d.t)).y(d => y(d.kfzMean)));
+  svg.append('path').datum(block)
+    .attr('fill', 'none').attr('stroke', '#2e7d32').attr('stroke-width', 2.5)
+    .attr('d', d3.line().curve(d3.curveMonotoneX).x(d => x(d.t)).y(d => y(d.fussMean)));
+});
+
+// Lücken zwischen den Messblöcken ausweisen, damit sie nicht wie Fehler wirken
+for (let i = 0; i < bloecke.length - 1; i++) {
+  const von = bloecke[i][bloecke[i].length - 1].t + 0.25, bis = bloecke[i + 1][0].t;
+  svg.append('text').attr('x', x((von + bis) / 2)).attr('y', M.t + 14)
+    .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#9aa3ad')
+    .text(`${Math.floor(von)}–${Math.ceil(bis)} Uhr: geschätzt`);
+}
+
+// Hover
+const marker = svg.append('g').style('display', 'none');
+marker.append('line').attr('y1', M.t).attr('y2', H - M.b).attr('stroke', '#333').attr('stroke-dasharray', '3 3');
+const dotMean = marker.append('circle').attr('r', 4.5).attr('fill', '#1565c0');
+const tt = document.getElementById('tt');
+
+svg.append('rect')
+  .attr('x', M.l).attr('y', M.t).attr('width', W - M.l - M.r).attr('height', H - M.t - M.b)
+  .attr('fill', 'transparent')
+  .on('mousemove', (ev) => {
+    const [mx] = d3.pointer(ev);
+    const t = Math.round(x.invert(mx) * 4) / 4;
+    const d = punkte.find(p => Math.abs(p.t - t) < 0.13);
+    if (!d) {
+      marker.style('display', 'none');
+      const hh = Math.floor(t), mm = Math.round((t % 1) * 60);
+      const est = schaetzung.find(s => Math.abs(s.t - t) < 0.13);
+      tt.style.display = 'block';
+      tt.style.left = Math.min(ev.offsetX + 18, document.getElementById('chart').clientWidth - 250) + 'px';
+      tt.style.top = (ev.offsetY + 14) + 'px';
+      tt.innerHTML = `<b>${hh}:${String(mm).padStart(2, '0')} Uhr</b> · noch nicht gezählt<br>` +
+        (est ? `<span style="color:#d32f2f">Profil-Schätzung: ≈ ${Math.round(est.v)} Rad/h</span><br>` : '') +
+        `<span style="color:#5a6472"><a href="/zaehlung">Zeitfenster übernehmen und mitzählen</a></span>`;
+      return;
+    }
+    marker.style('display', null);
+    marker.select('line').attr('x1', x(d.t)).attr('x2', x(d.t));
+    dotMean.attr('cx', x(d.t)).attr('cy', y(d.mean));
+    const hh = Math.floor(d.t), mm = Math.round((d.t % 1) * 60);
+    tt.style.display = 'block';
+    tt.style.left = Math.min(ev.offsetX + 18, document.getElementById('chart').clientWidth - 250) + 'px';
+    tt.style.top = (ev.offsetY + 14) + 'px';
+    tt.innerHTML = `<b>${hh}:${String(mm).padStart(2, '0')} Uhr</b> · ${d.werte.length} Zählung(en)<br>` +
+      (d.werte.length > 1 ? `Rad — Spannweite: <b>${d.min} – ${d.max}</b> /h · Mittel: <b>${Math.round(d.mean)}</b> /h<br>` :
+        `Rad gemessen: <b>${d.min}</b> /h<br>`) +
+      `Kfz — Mittel: <b>${Math.round(d.kfzMean)}</b> /h · Fuß — Mittel: <b>${Math.round(d.fussMean)}</b> /h<br>` +
+      d.werte.map(w => `<span style="color:#3c4a59">${w.label}: ${w.radH} Rad/h · ${w.kfzH} Kfz/h · ${w.fussH} Fuß/h</span>`).join('<br>');
+  })
+  .on('mouseleave', () => { marker.style('display', 'none'); tt.style.display = 'none'; });
+
+document.getElementById('methodik').innerHTML =
+  `<b>So wird die gestrichelte Schätzlinie berechnet</b> (Hochrechnung für Kurzzeitzählungen
+  nach FGSV-Erhebungsmethodik): Für die noch ungezählten Stunden wird die
+  Form der Tagesganglinie aus dem Stundenprofil übernommen (${PROFIL.quelle}) und an unsere
+  Messungen angepasst. Skalierung per Ratio-Schätzer: geschätzte Tagessumme
+  T&nbsp;=&nbsp;Σ&nbsp;gemessene Fahrten&nbsp;÷&nbsp;Σ&nbsp;Profilanteile der gemessenen Zeitfenster
+  = <b>${Math.round(sumFahrten)} Fahrten ÷ ${(sumAnteile).toFixed(3)} = ≈ ${Math.round(T)}
+  Radfahrten/Tag</b>. Die Schätzlinie ist damit die Ganglinie eines Tages mit dieser Summe —
+  gemessene Zeitfenster (blau) gelten immer vorrangig. Zur Einordnung: Förderschwelle
+  2.000 Radfahrten/Tag.`;
+
+document.getElementById('quelle').textContent =
+  `Datengrundlage: ${ZAEHLUNGEN.length} Bürgerzählungen (je 2 h, 15-Minuten-Intervalle, beide Richtungen), ` +
+  `erhoben nach FGSV/BASt-Methodik. Zähltage: ${[...new Set(ZAEHLUNGEN.map(z => z.datum))].join(', ')}.`;
+</script>
+</body>
+</html>

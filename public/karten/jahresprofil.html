@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Jahresprofil: Amtliche Dauerzählstelle Erlanger Straße (Nürnberg, RZG003)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { margin: 0; padding: 16px; font-family: system-ui, sans-serif; color: #14202b; }
+  h1 { font-size: 19px; margin: 0 0 2px; border-left: 8px solid #c3000f; padding-left: 10px; }
+  .rechen { height: 5px; max-width: 980px; margin: 8px 0 12px;
+    background: repeating-linear-gradient(90deg, #c3000f 0 18px, #ffffff 18px 36px);
+    border: 1px solid #c3000f; border-radius: 2px; }
+  p.sub { font-size: 13.5px; color: #3c4a59; margin: 0 0 12px; max-width: 920px; }
+  #chart { max-width: 980px; position: relative; }
+  .axis text { font-size: 12.5px; fill: #14202b; }
+  .axis path, .axis line { stroke: #5a6472; }
+  .grid line { stroke: #d4dae1; }
+  .grid path { display: none; }
+  .tooltip {
+    position: absolute; pointer-events: none; display: none;
+    background: #ffffff; border: 2px solid #c3000f; border-radius: 6px;
+    padding: 9px 13px; font-size: 12.5px; line-height: 1.55; box-shadow: 0 3px 10px rgba(0,0,0,.35);
+    z-index: 10; min-width: 200px; color: #14202b;
+  }
+  .quelle { font-size: 12px; color: #3c4a59; margin-top: 8px; max-width: 920px; }
+  .legend { font-size: 13px; margin: 4px 0 0; font-weight: 600; }
+  .legend span { display: inline-block; margin-right: 18px; }
+  .sw { display: inline-block; width: 22px; height: 11px; vertical-align: middle; margin-right: 5px; border-radius: 2px; }
+</style>
+</head>
+<body>
+<h1>Das Daten-Gebirge: Jahresprofil der amtlichen Zählstelle Erlanger Straße</h1>
+<div class="rechen"></div>
+<p class="sub">
+  Alle gemessenen Tageswerte der Dauerzählstelle Nürnberg, Erlanger Straße (RZG003) — auf dem
+  Korridor der geplanten Radschnellverbindung. Graues Band: Spannweite (Minimum–Maximum) aller
+  Jahre je Kalenderwoche; blaue Linie: Wochenmittel über alle Jahre. Mit der Maus über das
+  Diagramm fahren, um die Spannweite des jeweiligen Abschnitts zu sehen. Die rote Linie markiert
+  die Förderschwelle von 2.000 Radfahrten/Tag — sie wurde an <b>0 von 1.195 Messtagen</b> erreicht.
+  Violett darüber: die <b>Prognose der Stadt Erlangen von bis zu 4.800 Radfahrten/Tag</b> —
+  im gleichen Maßstab.
+</p>
+<div class="legend">
+  <span><span class="sw" style="background:#78909c;opacity:.5"></span>Spannweite Min–Max (2023–2026)</span>
+  <span><span class="sw" style="background:#0d47a1"></span>Wochenmittel</span>
+  <span><span class="sw" style="background:#c3000f"></span>Förderschwelle 2.000/Tag</span>
+  <span><span class="sw" style="background:#6a1b9a"></span>Prognose Stadt: bis zu 4.800/Tag</span>
+</div>
+<div id="chart"><div class="tooltip" id="tt"></div></div>
+<div class="quelle">
+  Quelle: Offene Zähldaten der Stadt Nürnberg, Eco-Counter-Portal (nuernberg.eco-counter.com),
+  Zählstelle RZG003 Erlanger Straße, Tageswerte 13.06.2023 bis heute. Querschnitt beider Richtungen.
+</div>
+
+<script src="/vendor/d3/d3.v7.min.js"></script>
+<script src="nbg-tageswerte.js"></script>
+<script>
+if (typeof d3 === 'undefined' || typeof NBG_TAGESWERTE === 'undefined') {
+  document.getElementById('chart').innerHTML =
+    '<div style="background:#fdecea;border:1px solid #c62828;border-radius:6px;padding:12px 16px;font-size:13px;max-width:700px">' +
+    '<b>Diagramm kann nicht geladen werden.</b> Bitte die Seite über den Webserver aufrufen ' +
+    '(lokal: <code>http://localhost:4321/karten/jahresprofil.html</code>), nicht als Datei öffnen — ' +
+    'sonst fehlen d3 (<code>/vendor/d3/…</code>) bzw. die Datendatei.</div>';
+  throw new Error('d3 oder NBG_TAGESWERTE nicht geladen');
+}
+// Kalenderwoche (vereinfacht: Tag-des-Jahres / 7)
+function woche(d) { return Math.min(52, Math.floor((d3.timeDay.count(d3.timeYear(d), d)) / 7)); }
+
+const alle = [];
+Object.entries(NBG_TAGESWERTE).forEach(([jahr, arr]) => {
+  arr.forEach(e => alle.push({ jahr, datum: new Date(e.d), v: e.v, w: woche(new Date(e.d)) }));
+});
+
+// Je Kalenderwoche: min/max/mean über alle Jahre + Werte je Jahr
+const wochen = d3.range(0, 53).map(w => {
+  const werte = alle.filter(e => e.w === w);
+  if (!werte.length) return null;
+  const jeJahr = d3.rollup(werte, vs => d3.mean(vs, e => e.v), e => e.jahr);
+  return {
+    w,
+    min: d3.min(werte, e => e.v), max: d3.max(werte, e => e.v),
+    mean: d3.mean(werte, e => e.v), n: werte.length,
+    jeJahr: Array.from(jeJahr, ([j, m]) => `${j}: Ø ${Math.round(m)}`).join(' · ')
+  };
+}).filter(Boolean);
+
+const W = 980, H = 460, M = { t: 16, r: 24, b: 40, l: 56 };
+const svg = d3.select('#chart').append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%');
+const x = d3.scaleLinear().domain([0, 52]).range([M.l, W - M.r]);
+const yMax = Math.max(5100, d3.max(wochen, d => d.max) * 1.08);
+const y = d3.scaleLinear().domain([0, yMax]).range([H - M.b, M.t]);
+
+const monate = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - M.b})`)
+  .call(d3.axisBottom(x).tickValues(d3.range(12).map(m => m * 52 / 12)).tickFormat((d, i) => monate[i]));
+svg.append('g').attr('class', 'grid').attr('transform', `translate(${M.l},0)`)
+  .call(d3.axisLeft(y).tickSize(-(W - M.l - M.r)).tickFormat(''));
+svg.append('g').attr('class', 'axis').attr('transform', `translate(${M.l},0)`).call(d3.axisLeft(y));
+svg.append('text').attr('x', M.l).attr('y', 11).attr('font-size', 12.5).attr('fill', '#14202b')
+  .text('Radfahrten pro Tag (Querschnitt)');
+
+// Spannweiten-Band ("Gebirge")
+svg.append('path').datum(wochen)
+  .attr('fill', '#78909c').attr('opacity', 0.45)
+  .attr('d', d3.area().curve(d3.curveMonotoneX).x(d => x(d.w)).y0(d => y(d.min)).y1(d => y(d.max)));
+
+// Wochenmittel
+svg.append('path').datum(wochen)
+  .attr('fill', 'none').attr('stroke', '#0d47a1').attr('stroke-width', 3.5)
+  .attr('d', d3.line().curve(d3.curveMonotoneX).x(d => x(d.w)).y(d => y(d.mean)));
+
+// Förderschwelle
+svg.append('line').attr('x1', x(0)).attr('x2', x(52)).attr('y1', y(2000)).attr('y2', y(2000))
+  .attr('stroke', '#c3000f').attr('stroke-width', 3).attr('stroke-dasharray', '7 5');
+svg.append('text').attr('x', x(1)).attr('y', y(2000) - 7).attr('font-size', 13).attr('font-weight', 700).attr('fill', '#c3000f')
+  .text('Förderschwelle 2.000 Radfahrten/Tag');
+
+// Prognose der Stadt Erlangen (bis zu 4.800/Tag laut Planungsunterlagen)
+svg.append('line').attr('x1', x(0)).attr('x2', x(52)).attr('y1', y(4800)).attr('y2', y(4800))
+  .attr('stroke', '#6a1b9a').attr('stroke-width', 3).attr('stroke-dasharray', '2 4');
+svg.append('text').attr('x', x(1)).attr('y', y(4800) - 7).attr('font-size', 13).attr('font-weight', 700).attr('fill', '#6a1b9a')
+  .text('Prognose Stadt Erlangen: bis zu 4.800 Radfahrten/Tag');
+
+// Hover: vertikale Markierung + Tooltip mit Range des Abschnitts
+const marker = svg.append('g').style('display', 'none');
+marker.append('line').attr('y1', M.t).attr('y2', H - M.b).attr('stroke', '#333').attr('stroke-dasharray', '3 3');
+const dotMin = marker.append('circle').attr('r', 3.5).attr('fill', '#666');
+const dotMax = marker.append('circle').attr('r', 3.5).attr('fill', '#666');
+const dotMean = marker.append('circle').attr('r', 4.5).attr('fill', '#1565c0');
+const tt = document.getElementById('tt');
+
+svg.append('rect')
+  .attr('x', M.l).attr('y', M.t).attr('width', W - M.l - M.r).attr('height', H - M.t - M.b)
+  .attr('fill', 'transparent')
+  .on('mousemove', (ev) => {
+    const [mx] = d3.pointer(ev);
+    const w = Math.round(x.invert(mx));
+    const d = wochen.find(e => e.w === Math.max(0, Math.min(52, w)));
+    if (!d) return;
+    marker.style('display', null).attr('transform', null);
+    marker.select('line').attr('x1', x(d.w)).attr('x2', x(d.w));
+    dotMin.attr('cx', x(d.w)).attr('cy', y(d.min));
+    dotMax.attr('cx', x(d.w)).attr('cy', y(d.max));
+    const dotMean2 = dotMean.attr('cx', x(d.w)).attr('cy', y(d.mean));
+    const datum = new Date(2025, 0, 1 + d.w * 7);
+    tt.style.display = 'block';
+    tt.style.left = Math.min(ev.offsetX + 18, document.getElementById('chart').clientWidth - 220) + 'px';
+    tt.style.top = (ev.offsetY + 14) + 'px';
+    tt.innerHTML = `<b>KW ${d.w + 1}</b> (ca. ${monate[datum.getMonth()]}) · ${d.n} Messtage<br>` +
+      `Spannweite: <b>${d.min} – ${d.max}</b> Rad/Tag<br>` +
+      `Mittel: <b>${Math.round(d.mean)}</b> Rad/Tag<br>` +
+      `<span style="color:#3c4a59">${d.jeJahr}</span><br>` +
+      `<span style="color:#c3000f;font-weight:700">${Math.round(d.mean / 2000 * 100)} % der Förderschwelle</span>`;
+  })
+  .on('mouseleave', () => { marker.style('display', 'none'); tt.style.display = 'none'; });
+</script>
+</body>
+</html>
