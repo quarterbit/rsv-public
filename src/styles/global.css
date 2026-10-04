@@ -293,6 +293,13 @@ footer.site a { color: var(--text-invers); }
   outline-offset: 1px;
   border-color: var(--blau);
 }
+.sonne-hinweis {
+  background: #fff4d6; border: 2px solid #f2a900; border-radius: 8px;
+  padding: 0.9rem 1.2rem; margin: 1.2rem 0;
+}
+.sonne-hinweis h3 { margin-top: 0; color: #8a5a00; }
+.sonne-hinweis p:last-child { margin-bottom: 0; }
+
 .newsletter-hinweis {
   font-size: 0.82rem;
   color: #5a6472;

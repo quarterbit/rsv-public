@@ -36,7 +36,14 @@
 <div id="chart"></div>
 <div id="fazit" class="quelle"></div>
 
-<h1 style="margin-top:28px">Alle Zählungen: Tageshochrechnung gegen Förderschwelle und Stadt-Prognose</h1>
+<h1 style="margin-top:28px">☀ Alle Zählungen: Tageshochrechnung gegen Förderschwelle und Stadt-Prognose</h1>
+<p class="sub" style="background:#fff4d6;border:2px solid #f2a900;border-radius:6px;padding:8px 12px">
+  ☀ <b>Alle Zählungen fanden an Schönwetter-Spitzentagen statt:</b> Ende Juli an Werktagen vor den
+  Sommerferien und am sonnigen 1. Oktober. Die amtliche Zählstelle misst an solchen Tagen das
+  <b>1,8-Fache</b> ihres Jahresmittels (973 statt 533), im Januar weniger als die Hälfte; 90&nbsp;% aller
+  Tage liegen unter 1.000. <b>Die gestrichelte Linie zeigt unsere Werte aufs Jahr umgerechnet: rund 570
+  Radfahrten pro Tag.</b> In allen anderen Monaten fahren deutlich weniger.
+</p>
 <p class="sub">Hochgerechneter Tageswert je Zählung (gleiches Verfahren); rote Linie = 2.000
 Radfahrten/Tag (Förderschwelle der Verwaltungsvereinbarung Radschnellwege); violette Linie =
 bis zu 4.800 Radfahrten/Tag, mit denen die Stadt Erlangen in ihren Planungsunterlagen rechnet —
@@ -183,13 +190,13 @@ zeichne('alle');
   const daten = ZAEHLUNGEN.map(z => {
     const t0 = startStunde(z.uhrzeit);
     const p = t0 === null ? null : fensterAnteil(PROFIL.anteile, t0, 2);
-    return { label: `${z.ort} (${z.datum}, ${z.uhrzeit})`, tag: p ? z.rad / p : null };
+    return { label: `☀ ${z.ort} (${z.datum}, ${z.uhrzeit})`, tag: p ? z.rad / p : null };
   }).filter(d => d.tag !== null);
 
-  const W = 960, H = 60 + daten.length * 52, M = { t: 10, r: 60, b: 36, l: 10 };
+  const W = 960, H = 70 + daten.length * 66, M = { t: 24, r: 60, b: 36, l: 10 };
   const xMax = Math.max(5100, d3.max(daten, d => d.tag) * 1.1);
   const x = d3.scaleLinear().domain([0, xMax]).range([M.l, W - M.r]);
-  const y = d3.scaleBand().domain(daten.map(d => d.label)).range([M.t, H - M.b]).padding(0.35);
+  const y = d3.scaleBand().domain(daten.map(d => d.label)).range([M.t, H - M.b]).padding(0.5);
 
   const svg = d3.select('#uebersicht').append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%');
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - M.b})`)
@@ -198,15 +205,23 @@ zeichne('alle');
   svg.selectAll('rect.tag').data(daten).join('rect')
     .attr('x', x(0)).attr('y', d => y(d.label))
     .attr('width', d => x(d.tag) - x(0)).attr('height', y.bandwidth())
-    .attr('fill', '#0d47a1').attr('opacity', 0.9);
+    .attr('fill', '#f2a900').attr('opacity', 0.95);
   svg.selectAll('text.lbl').data(daten).join('text')
-    .attr('x', x(0) + 6).attr('y', d => y(d.label) + y.bandwidth() / 2 - 4)
-    .attr('font-size', 12).attr('fill', '#fff').attr('dominant-baseline', 'middle')
+    .attr('x', x(0) + 6).attr('y', d => y(d.label) - 5)
+    .attr('font-size', 12).attr('fill', '#14202b').attr('dominant-baseline', 'middle').attr('stroke', '#fff').attr('stroke-width', 4).attr('paint-order', 'stroke')
     .text(d => d.label);
   svg.selectAll('text.val').data(daten).join('text')
     .attr('x', d => x(d.tag) + 6).attr('y', d => y(d.label) + y.bandwidth() / 2)
     .attr('font-size', 12).attr('font-weight', 700).attr('dominant-baseline', 'middle')
     .text(d => `≈ ${Math.round(d.tag)}/Tag`);
+
+  // Jahresäquivalent: Saisonfaktor der amtlichen Zählstelle (Werktage Ende Juli ÷ Jahresmittel = 1,82)
+  const SAISONFAKTOR = 1.82;
+  const jahr = d3.mean(daten, d => d.tag) / SAISONFAKTOR;
+  svg.append('line').attr('x1', x(jahr)).attr('x2', x(jahr)).attr('y1', M.t).attr('y2', H - M.b)
+    .attr('stroke', '#14304f').attr('stroke-width', 2.5).attr('stroke-dasharray', '4 3');
+  svg.append('text').attr('x', x(jahr) + 5).attr('y', H - M.b - 6).attr('font-size', 12.5).attr('font-weight', 700)
+    .attr('fill', '#14304f').text(`aufs Jahr umgerechnet ≈ ${Math.round(jahr / 10) * 10}/Tag`);
 
   svg.append('line').attr('x1', x(2000)).attr('x2', x(2000)).attr('y1', M.t).attr('y2', H - M.b)
     .attr('stroke', '#c3000f').attr('stroke-width', 3).attr('stroke-dasharray', '7 5');
