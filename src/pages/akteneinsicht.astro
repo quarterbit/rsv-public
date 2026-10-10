@@ -99,6 +99,133 @@ import Base from '../layouts/Base.astro';
     .dokindex td:last-child, .dokindex th:last-child { white-space: nowrap; }
   </style>
 
+  <h2 id="zeitstrahl">Prognose und Messungen im zeitlichen Verlauf</h2>
+  <p>
+    Wir haben die Zahlen aus den Unterlagen nach Datum geordnet: orange die Annahmen der Planung,
+    blau die Messungen und die eigenen Zahlen der Stadt. Seitenzahlen nennen wir so, wie sie im
+    jeweiligen Dokument gedruckt sind.
+  </p>
+  <figure class="zeitstrahl-fig">
+    <svg viewBox="0 0 900 470" role="img" aria-label="Diagramm: Prognose der Planung und Messungen, 2017 bis 2026, Radfahrende pro Tag">
+      <line x1="70" y1="40" x2="70" y2="430" stroke="#9aa3ad" stroke-width="1.5"/>
+      <line x1="70" y1="430" x2="850" y2="430" stroke="#9aa3ad" stroke-width="1.5"/>
+      <g font-size="10" fill="#5a6472" text-anchor="end">
+        <line x1="70" y1="387" x2="850" y2="387" stroke="#eceff3"/><text x="63" y="391">1.000</text>
+        <line x1="70" y1="256" x2="850" y2="256" stroke="#eceff3"/><text x="63" y="260">4.000</text>
+        <line x1="70" y1="149" x2="850" y2="149" stroke="#eceff3"/><text x="63" y="153">6.500</text>
+        <line x1="70" y1="62" x2="850" y2="62" stroke="#eceff3"/><text x="63" y="66">8.500</text>
+        <text x="63" y="434">0</text>
+      </g>
+      <text x="18" y="235" font-size="10" fill="#5a6472" transform="rotate(-90 18,235)" text-anchor="middle">Radfahrende pro Tag</text>
+      <g font-size="10" fill="#5a6472" text-anchor="middle">
+        <text x="140" y="446">2017</text><text x="280" y="446">2019</text><text x="420" y="446">2021</text>
+        <text x="630" y="446">2024</text><text x="700" y="446">2025</text><text x="770" y="446">2026</text>
+      </g>
+      <line x1="70" y1="343" x2="850" y2="343" stroke="#c8102e" stroke-width="2" stroke-dasharray="7 5"/>
+      <text x="846" y="337" font-size="10" font-weight="700" fill="#c8102e" text-anchor="end">Förderschwelle 2.000/Tag</text>
+      <polyline points="140,352 420,62 700,62" fill="none" stroke="#e8731c" stroke-width="3"/>
+      <g fill="#e8731c"><circle cx="140" cy="352" r="5"/><circle cx="420" cy="62" r="6"/><circle cx="700" cy="62" r="6"/></g>
+      <g font-size="10.5" font-weight="700" fill="#b0500a">
+        <text x="150" y="345">1.500–1.800</text>
+        <text x="420" y="54" text-anchor="middle">8.500</text>
+        <text x="700" y="54" text-anchor="middle">8.500</text>
+      </g>
+      <g font-size="8.5" fill="#5a6472">
+        <text x="150" y="333">Machbarkeitsstudie</text>
+        <text x="420" y="86" text-anchor="middle">Nutzen-Kosten-Analyse</text>
+        <text x="700" y="86" text-anchor="middle">Vorplanung</text>
+      </g>
+      <polyline points="280,387 630,402 770,402" fill="none" stroke="#14304f" stroke-width="2" stroke-dasharray="2 3" opacity="0.6"/>
+      <g fill="#14304f"><circle cx="280" cy="387" r="5"/><circle cx="630" cy="402" r="5"/><circle cx="770" cy="402" r="5"/></g>
+      <line x1="770" y1="392" x2="770" y2="397" stroke="#14304f" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.7"/>
+      <polygon points="770,399 767,394 773,394" fill="#14304f" opacity="0.7"/>
+      <circle cx="770" cy="387" r="4.5" fill="#fff" stroke="#14304f" stroke-width="1.6"/>
+      <g font-size="9" fill="#14304f" font-weight="700">
+        <text x="280" y="378" text-anchor="middle">1.000</text>
+        <text x="628" y="416" text-anchor="middle">~650</text>
+        <text x="800" y="390" text-anchor="start">≤1.000</text>
+        <text x="772" y="416" text-anchor="middle">~650*</text>
+      </g>
+      <g font-size="8" fill="#5a6472">
+        <text x="280" y="368" text-anchor="middle">Branderweg (Stadt 2019)</text>
+        <text x="628" y="426" text-anchor="middle">amtliche Zählstelle</text>
+        <text x="800" y="380" text-anchor="start">Schönwetter</text>
+        <text x="772" y="426" text-anchor="middle">Bürgerz. Jahresmittel</text>
+      </g>
+      <g font-size="9.5">
+        <rect x="150" y="150" width="14" height="4" fill="#e8731c"/><text x="169" y="157" fill="#1e2430">Prognose/Annahme der Planung</text>
+        <circle cx="355" cy="152" r="4" fill="#14304f"/><text x="365" y="156" fill="#1e2430">Messung/Zahl der Stadt</text>
+      </g>
+    </svg>
+    <figcaption>
+      Die Prognose steigt zwischen 2017 und 2021 von 1.500–1.800 auf 8.500 Radfahrende am Tag, die
+      Vorplanung 2025 übernimmt den Wert. Alle Messungen und die Zahl der Stadt für den Branderweg
+      (1.000 am Tag, 2019) liegen bei 650 bis 1.000. Die Förderschwelle von 2.000 wird in keiner Messung
+      erreicht. Eigene Darstellung.<br>
+      <small>*Bürgerzählung: hochgerechnet aus sieben Zählungen von je zwei Stunden an Tagen mit bestem
+      Radwetter höchstens rund 1.000 am Tag. Übers Jahr liegt der Wert niedriger, etwa auf dem Niveau der
+      amtlichen Zählstelle (rund 650). Der volle Punkt zeigt das Jahresmittel, der hohle den Schönwetterwert.</small>
+    </figcaption>
+  </figure>
+
+  <div class="zeitstrahl">
+    <div class="ev plan"><span class="d">2017: Machbarkeitsstudie</span> <span class="tag">Prognose</span>
+      <p>Regionale Potenzialanalyse auf Basis von Einwohnern und Arbeitsplätzen. Für den Korridor nach
+      Nordosten: <strong>1.500 bis 1.800 am Tag</strong>, mit Radschnellweg. Als Maßstab gilt „mindestens 2.000"
+      Radfahrer am Tag (Machbarkeitsstudie 2017, S. 21 und 90).</p></div>
+
+    <div class="ev real"><span class="d">2019: Verkehrsentwicklungsplan, Meilenstein F</span> <span class="tag">Zahl der Stadt</span>
+      <p>Die Stadt nennt für den <strong>Branderweg 1.000 Radfahrten am Tag</strong> (Meilenstein F, S. 88).
+      Branderweg und Franzosenweg gelten als wichtige Verbindung für Schulkinder (S. 84).</p>
+      <p class="einsch">Aus unserer Sicht erklärungsbedürftig: Diese Zahl liegt beim Achtel der späteren Prognose.</p></div>
+
+    <div class="ev plan"><span class="d">2021: Nutzen-Kosten-Analyse</span> <span class="tag">Prognose</span>
+      <p>Grundlage sind der BASt-Leitfaden und das Erlanger Verkehrsmodell. Das Modell wird an den
+      Regnitzquerungen abgeglichen und gekürzt, hinzu kommen pauschal <strong>30 % Wachstum</strong> nach dem
+      Nürnberger Trend (S. 8–9). Neue Radfahrende stammen ausschließlich vom Pkw (S. 9). Ergebnis für
+      Tennenlohe–Erlangen-Süd: <strong>8.500 am Tag</strong>.</p>
+      <p class="einsch">Zwischen 2017 und 2021 steigt der Wert damit auf fast das Fünffache. Einen Vergleichswert
+      im Korridor Tennenlohe finden wir in der Unterlage nicht.</p></div>
+
+    <div class="ev plan"><span class="d">November 2024: Bewertungsmatrix der Trassenvarianten</span> <span class="tag">Trassenwahl</span>
+      <p>Die Variante „parallel StUB/B4" erfüllt den Standard zu <strong>100 %</strong> und liegt auf Platz 4,
+      unter anderem wegen Umwelt und Kosten. Die Ortsdurchfahrt liegt vorn.</p></div>
+
+    <div class="ev real"><span class="d">Dezember 2024: Zählung der Stadt am Leitensteig</span> <span class="tag">Messung</span>
+      <p>Auf den Armen des Leitensteigs wurden <strong>54, 32 und 47 Radfahrende in zwei Stunden</strong> gezählt,
+      im Dezember. Die hohen Pkw-Zahlen des Zählblatts gehören zum Wetterkreuz.</p></div>
+
+    <div class="ev plan"><span class="d">Februar 2025: Vorplanung (Leistungsphase 2)</span> <span class="tag">Entscheidung</span>
+      <p>Die Vorplanung geht von über 8.500 am Tag aus, „weshalb im Rahmen der Leistungsphase 2 auf eine
+      erneute Verkehrsmodellierung verzichtet wurde" (Vorplanung 2025, S. 16).</p></div>
+
+    <div class="ev real"><span class="d">2023 bis 2026: Amtliche Zählstelle und Bürgerzählungen</span> <span class="tag">Messung</span>
+      <p>Die Dauerzählstelle Erlanger Straße (Nürnberg, im Korridor) misst <strong>rund 650 am Tag</strong>, an
+      keinem von 1.195 Tagen über 2.000. Unsere Bürgerzählungen in Tennenlohe 2026 ergeben
+      <strong>höchstens rund 1.000 am Tag</strong> an Schönwettertagen, übers Jahr weniger.</p>
+      <p class="einsch">Aus unserer Sicht lassen sich diese Werte mit der Prognose von 8.500 schwer vereinbaren.
+      Wir bitten die Stadt um Erläuterung.</p></div>
+  </div>
+  <p class="zs-foot">Orange: Annahme oder Prognose der Planung. Blau: Messung oder eigene Zahl der Stadt.
+  Kurze Belegzitate nach § 51 UrhG. Zahlen sind Tatsachen und nicht urheberrechtlich geschützt.</p>
+  <style>
+    .zeitstrahl-fig { margin: 1rem 0; background: #fff; border: 1px solid var(--rand); border-radius: var(--radius); padding: 0.8rem; }
+    .zeitstrahl-fig svg { width: 100%; height: auto; display: block; }
+    .zeitstrahl-fig figcaption { font-size: 0.88rem; color: #5a6472; margin-top: 0.5rem; }
+    .zeitstrahl { border-left: 3px solid var(--rand); margin: 1rem 0 0.5rem 0.5rem; }
+    .zeitstrahl .ev { position: relative; padding: 0.1rem 0 0.1rem 1.4rem; margin-bottom: 1rem; }
+    .zeitstrahl .ev::before { content: ""; position: absolute; left: -0.6rem; top: 0.3rem; width: 0.9rem; height: 0.9rem; border-radius: 50%; border: 3px solid var(--sand); }
+    .zeitstrahl .ev.plan::before { background: #e8731c; }
+    .zeitstrahl .ev.real::before { background: var(--blau); }
+    .zeitstrahl .ev p { margin: 0.25rem 0; font-size: 0.95rem; }
+    .zeitstrahl .d { font-weight: 700; }
+    .zeitstrahl .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; color: #fff; border-radius: 9px; padding: 0 0.5rem; margin-left: 0.3rem; }
+    .zeitstrahl .plan .tag { background: #b0500a; }
+    .zeitstrahl .real .tag { background: var(--blau); }
+    .zeitstrahl .einsch { color: #5a6472; font-style: italic; }
+    .zs-foot { font-size: 0.82rem; color: #5a6472; }
+  </style>
+
   <h2>Erste Erkenntnisse</h2>
   <ul>
     <li>Im Modell finden sich noch Betriebe, die seit über fünf Jahren nicht mehr existieren — und viele weitere spannende Details.</li>
