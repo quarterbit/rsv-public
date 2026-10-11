@@ -18,7 +18,42 @@ import Base from '../layouts/Base.astro';
     Die komplette geplante Trasse der Radschnellverbindung, abgefahren mit dem Rad und
     in 4K gefilmt — so erleben Radfahrende die Strecke heute.
   </p>
-  <div class="video-embed" data-video-id="2SM7-LLurz4">
+  <div class="video-embed" data-video-id="2SM7-LLurz4" data-video-title="Video: Trasse der Radschnellverbindung Tennenlohe">
+    <div class="video-consent">
+      <p><strong>Video von YouTube laden?</strong></p>
+      <p class="video-hinweis">
+        Erst nach Klick wird eine Verbindung zu YouTube (Google) hergestellt und das Video
+        in der datenschutzfreundlichen Variante (youtube-nocookie.com) geladen.
+        Details in der <a href="/datenschutz">Datenschutzerklärung</a>.
+      </p>
+      <button type="button" class="button video-start">▶ Video abspielen</button>
+    </div>
+  </div>
+
+  <h2>Videos: Vorschläge zur Verbesserung des Radverkehrs</h2>
+  <p>
+    Statt einer Trasse durch den Ortskern schlagen wir vor, bestehende Alltagsrouten sicher zu machen.
+    Zwei davon zeigen diese Videos.
+  </p>
+
+  <h3>Von der S-Bahn-Haltestelle Eltersdorf ins Gewerbegebiet Tennenlohe</h3>
+  <div class="video-embed" data-video-id="wXpY83w2_UU" data-video-title="Video: Radweg von der S-Bahn-Haltestelle Eltersdorf ins Gewerbegebiet Tennenlohe">
+    <div class="video-consent">
+      <p><strong>Video von YouTube laden?</strong></p>
+      <p class="video-hinweis">
+        Erst nach Klick wird eine Verbindung zu YouTube (Google) hergestellt und das Video
+        in der datenschutzfreundlichen Variante (youtube-nocookie.com) geladen.
+        Details in der <a href="/datenschutz">Datenschutzerklärung</a>.
+      </p>
+      <button type="button" class="button video-start">▶ Video abspielen</button>
+    </div>
+  </div>
+
+  <h3>Vom Gewerbegebiet Tennenlohe über die Autobahn nach Großgründlach</h3>
+  <p>
+    Der Radweg endet unvermittelt, und die Straße ohne Mittelmarkierung lässt danach kaum Platz für Radfahrende.
+  </p>
+  <div class="video-embed" data-video-id="wU9N-BHHyD8" data-video-title="Video: Weg vom Gewerbegebiet Tennenlohe über die Autobahn nach Großgründlach">
     <div class="video-consent">
       <p><strong>Video von YouTube laden?</strong></p>
       <p class="video-hinweis">
@@ -38,7 +73,7 @@ import Base from '../layouts/Base.astro';
         const id = embed.getAttribute('data-video-id');
         const iframe = document.createElement('iframe');
         iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
-        iframe.title = 'Video: Trasse der Radschnellverbindung Tennenlohe';
+        iframe.title = embed.getAttribute('data-video-title') || 'Video';
         iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
         iframe.allowFullscreen = true;
         embed.replaceChildren(iframe);
