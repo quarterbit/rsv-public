@@ -37,14 +37,18 @@
   Jahre je Kalenderwoche; blaue Linie: Wochenmittel über alle Jahre. Mit der Maus über das
   Diagramm fahren, um die Spannweite des jeweiligen Abschnitts zu sehen. Die rote Linie markiert
   die Förderschwelle von 2.000 Radfahrten/Tag — sie wurde an <b>0 von 1.195 Messtagen</b> erreicht.
-  Violett darüber: die <b>Prognose der Stadt Erlangen von bis zu 4.800 Radfahrten/Tag</b> —
-  im gleichen Maßstab.
+  Darüber die beiden Prognosewerte der Planung, <b>bewusst im gleichen Maßstab</b>: hell die
+  <b>4.800</b>, die 2021 öffentlich genannt wurden, kräftig die <b>8.500</b> aus der
+  Nutzen-Kosten-Analyse. Für den Abschnitt, auf dem diese Zählstelle steht (Buch–Nordring),
+  nennt die Nutzen-Kosten-Analyse 4.800 bis 7.900 Radfahrende am Tag; für Tennenlohe
+  über 8.500.
 </p>
 <div class="legend">
   <span><span class="sw" style="background:#78909c;opacity:.5"></span>Spannweite Min–Max (2023–2026)</span>
   <span><span class="sw" style="background:#0d47a1"></span>Wochenmittel</span>
-  <span><span class="sw" style="background:#c3000f"></span>Förderschwelle 2.000/Tag</span>
-  <span><span class="sw" style="background:#6a1b9a"></span>Prognose Stadt: bis zu 4.800/Tag</span>
+  <span><span class="sw" style="background:#c3000f"></span>Förderschwelle 2.000</span>
+  <span><span class="sw" style="background:#9575cd"></span>öffentlich 2021: 4.800</span>
+  <span><span class="sw" style="background:#4a148c"></span>Nutzen-Kosten-Analyse: 8.500</span>
 </div>
 <div id="chart"><div class="tooltip" id="tt"></div></div>
 <div class="quelle">
@@ -84,10 +88,11 @@ const wochen = d3.range(0, 53).map(w => {
   };
 }).filter(Boolean);
 
-const W = 980, H = 460, M = { t: 16, r: 24, b: 40, l: 56 };
+const W = 980, H = 560, M = { t: 16, r: 24, b: 40, l: 56 };
 const svg = d3.select('#chart').append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%');
 const x = d3.scaleLinear().domain([0, 52]).range([M.l, W - M.r]);
-const yMax = Math.max(5100, d3.max(wochen, d => d.max) * 1.08);
+// Gleicher Maßstab für Messung und Prognose: die Achse reicht bis über die 8.500 der Planung
+const yMax = Math.max(9200, d3.max(wochen, d => d.max) * 1.08);
 const y = d3.scaleLinear().domain([0, yMax]).range([H - M.b, M.t]);
 
 const monate = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
@@ -96,7 +101,7 @@ svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - M.b})
 svg.append('g').attr('class', 'grid').attr('transform', `translate(${M.l},0)`)
   .call(d3.axisLeft(y).tickSize(-(W - M.l - M.r)).tickFormat(''));
 svg.append('g').attr('class', 'axis').attr('transform', `translate(${M.l},0)`).call(d3.axisLeft(y));
-svg.append('text').attr('x', M.l).attr('y', 11).attr('font-size', 12.5).attr('fill', '#14202b')
+svg.append('text').attr('x', M.l).attr('y', 13).attr('font-size', 12.5).attr('fill', '#5a6472')
   .text('Radfahrten pro Tag (Querschnitt)');
 
 // Spannweiten-Band ("Gebirge")
@@ -115,11 +120,17 @@ svg.append('line').attr('x1', x(0)).attr('x2', x(52)).attr('y1', y(2000)).attr('
 svg.append('text').attr('x', x(1)).attr('y', y(2000) - 7).attr('font-size', 13).attr('font-weight', 700).attr('fill', '#c3000f')
   .text('Förderschwelle 2.000 Radfahrten/Tag');
 
-// Prognose der Stadt Erlangen (bis zu 4.800/Tag laut Planungsunterlagen)
+// 2021 öffentlich genannt: bis zu 4.800/Tag (Pressemitteilung des Bundes; Untergrenze dieses Abschnitts)
 svg.append('line').attr('x1', x(0)).attr('x2', x(52)).attr('y1', y(4800)).attr('y2', y(4800))
-  .attr('stroke', '#6a1b9a').attr('stroke-width', 3).attr('stroke-dasharray', '2 4');
-svg.append('text').attr('x', x(1)).attr('y', y(4800) - 7).attr('font-size', 13).attr('font-weight', 700).attr('fill', '#6a1b9a')
-  .text('Prognose Stadt Erlangen: bis zu 4.800 Radfahrten/Tag');
+  .attr('stroke', '#9575cd').attr('stroke-width', 2.5).attr('stroke-dasharray', '2 4');
+svg.append('text').attr('x', x(1)).attr('y', y(4800) - 7).attr('font-size', 13).attr('font-weight', 700).attr('fill', '#5e35b1')
+  .text('2021 öffentlich genannt: bis zu 4.800 Radfahrten/Tag');
+
+// Prognose der Planung für Tennenlohe (Nutzen-Kosten-Analyse 2021, Vorplanung 2025)
+svg.append('line').attr('x1', x(0)).attr('x2', x(52)).attr('y1', y(8500)).attr('y2', y(8500))
+  .attr('stroke', '#4a148c').attr('stroke-width', 3.5).attr('stroke-dasharray', '9 4');
+svg.append('text').attr('x', x(1)).attr('y', y(8500) - 7).attr('font-size', 13).attr('font-weight', 700).attr('fill', '#4a148c')
+  .text('Prognose der Planung für Tennenlohe: über 8.500 Radfahrten/Tag');
 
 // Hover: vertikale Markierung + Tooltip mit Range des Abschnitts
 const marker = svg.append('g').style('display', 'none');

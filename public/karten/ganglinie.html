@@ -44,10 +44,13 @@
   Tage liegen unter 1.000. <b>Die gestrichelte Linie zeigt unsere Werte aufs Jahr umgerechnet: rund 570
   Radfahrten pro Tag.</b> In allen anderen Monaten fahren deutlich weniger.
 </p>
-<p class="sub">Hochgerechneter Tageswert je Zählung (gleiches Verfahren); rote Linie = 2.000
-Radfahrten/Tag (Förderschwelle der Verwaltungsvereinbarung Radschnellwege); violette Linie =
-bis zu 4.800 Radfahrten/Tag, mit denen die Stadt Erlangen in ihren Planungsunterlagen rechnet —
-bewusst im gleichen Maßstab dargestellt.</p>
+<p class="sub">Hochgerechneter Tageswert je Zählung (gleiches Verfahren). Rote Linie = 2.000
+Radfahrten/Tag (Förderschwelle der Verwaltungsvereinbarung Radschnellwege). Darüber die beiden
+Prognosewerte, <b>bewusst im gleichen Maßstab</b>: hell die <b>4.800</b>, die 2021 öffentlich
+genannt wurden (Pressemitteilung des Bundes vom 02.12.2021 — das ist die Untergrenze eines
+Nürnberger Abschnitts), kräftig die <b>über 8.500</b>, die die Nutzen-Kosten-Analyse von 2021
+für den Abschnitt Tennenlohe nennt und die Vorplanung 2025 übernimmt. Diese Zahl ist uns erst
+durch die Akteneinsicht bekannt geworden.</p>
 <div id="uebersicht"></div>
 
 <script src="/vendor/d3/d3.v7.min.js"></script>
@@ -193,8 +196,9 @@ zeichne('alle');
     return { label: `☀ ${z.ort} (${z.datum}, ${z.uhrzeit})`, tag: p ? z.rad / p : null };
   }).filter(d => d.tag !== null);
 
-  const W = 960, H = 70 + daten.length * 66, M = { t: 24, r: 60, b: 36, l: 10 };
-  const xMax = Math.max(5100, d3.max(daten, d => d.tag) * 1.1);
+  const W = 960, H = 86 + daten.length * 66, M = { t: 40, r: 60, b: 36, l: 10 };
+  // Gleicher Maßstab für Messung und Prognose: die Achse reicht bis über die 8.500 der Planung
+  const xMax = Math.max(9200, d3.max(daten, d => d.tag) * 1.1);
   const x = d3.scaleLinear().domain([0, xMax]).range([M.l, W - M.r]);
   const y = d3.scaleBand().domain(daten.map(d => d.label)).range([M.t, H - M.b]).padding(0.5);
 
@@ -225,13 +229,20 @@ zeichne('alle');
 
   svg.append('line').attr('x1', x(2000)).attr('x2', x(2000)).attr('y1', M.t).attr('y2', H - M.b)
     .attr('stroke', '#c3000f').attr('stroke-width', 3).attr('stroke-dasharray', '7 5');
-  svg.append('text').attr('x', x(2000) + 5).attr('y', M.t + 12).attr('font-size', 13).attr('font-weight', 700)
+  svg.append('text').attr('x', x(2000) + 5).attr('y', M.t - 20).attr('font-size', 13).attr('font-weight', 700)
     .attr('fill', '#c3000f').text('Förderschwelle 2.000/Tag');
 
+  // 2021 öffentlich genannt (Pressemitteilung des Bundes): bis zu 4.800/Tag
   svg.append('line').attr('x1', x(4800)).attr('x2', x(4800)).attr('y1', M.t).attr('y2', H - M.b)
-    .attr('stroke', '#6a1b9a').attr('stroke-width', 3).attr('stroke-dasharray', '2 4');
-  svg.append('text').attr('x', x(4800) - 5).attr('y', M.t + 12).attr('font-size', 13).attr('font-weight', 700)
-    .attr('text-anchor', 'end').attr('fill', '#6a1b9a').text('Prognose Stadt Erlangen: bis zu 4.800/Tag');
+    .attr('stroke', '#9575cd').attr('stroke-width', 2.5).attr('stroke-dasharray', '2 4');
+  svg.append('text').attr('x', x(4800) + 5).attr('y', M.t - 20).attr('font-size', 13).attr('font-weight', 700)
+    .attr('fill', '#5e35b1').text('2021 öffentlich genannt: 4.800/Tag');
+
+  // Prognose der Planung für Tennenlohe (Nutzen-Kosten-Analyse 2021, Vorplanung 2025)
+  svg.append('line').attr('x1', x(8500)).attr('x2', x(8500)).attr('y1', M.t).attr('y2', H - M.b)
+    .attr('stroke', '#4a148c').attr('stroke-width', 3.5).attr('stroke-dasharray', '9 4');
+  svg.append('text').attr('x', x(8500) - 5).attr('y', M.t - 4).attr('font-size', 13).attr('font-weight', 700)
+    .attr('text-anchor', 'end').attr('fill', '#4a148c').text('Nutzen-Kosten-Analyse: über 8.500/Tag');
 })();
 </script>
 </body>
