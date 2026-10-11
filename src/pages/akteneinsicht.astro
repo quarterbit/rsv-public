@@ -106,7 +106,7 @@ import Base from '../layouts/Base.astro';
     jeweiligen Dokument gedruckt sind.
   </p>
   <figure class="zeitstrahl-fig">
-    <svg viewBox="0 0 900 495" role="img" aria-label="Diagramm: Prognose der Planung und Messungen, 2017 bis 2026, Radfahrende pro Tag">
+    <svg viewBox="0 0 900 495" role="img" aria-label="Diagramm: Prognose der Planung, öffentlich genannte Zahl und Messungen, 2017 bis 2026, Radfahrende pro Tag">
       <line x1="70" y1="40" x2="70" y2="430" stroke="#9aa3ad" stroke-width="1.5"/>
       <line x1="70" y1="430" x2="850" y2="430" stroke="#9aa3ad" stroke-width="1.5"/>
       <g font-size="10" fill="#5a6472" text-anchor="end">
@@ -126,14 +126,22 @@ import Base from '../layouts/Base.astro';
       <polyline points="140,352 420,62 700,62" fill="none" stroke="#e8731c" stroke-width="3"/>
       <g fill="#e8731c"><circle cx="140" cy="352" r="5"/><circle cx="420" cy="62" r="6"/><circle cx="700" cy="62" r="6"/></g>
       <g font-size="10.5" font-weight="700" fill="#b0500a">
-        <text x="150" y="345">1.500–1.800</text>
+        <text x="150" y="345" stroke="#fdfaf6" stroke-width="3.5" paint-order="stroke">1.500–1.800</text>
         <text x="420" y="54" text-anchor="middle">8.500</text>
         <text x="700" y="54" text-anchor="middle">8.500</text>
       </g>
       <g font-size="8.5" fill="#5a6472">
-        <text x="150" y="333">Machbarkeitsstudie</text>
-        <text x="420" y="86" text-anchor="middle">Nutzen-Kosten-Analyse</text>
+        <text x="150" y="333" stroke="#fdfaf6" stroke-width="3" paint-order="stroke">Machbarkeitsstudie</text>
+        <text x="420" y="86" text-anchor="middle" stroke="#fdfaf6" stroke-width="3" paint-order="stroke">Nutzen-Kosten-Analyse</text>
         <text x="700" y="86" text-anchor="middle">Vorplanung</text>
+      </g>
+      <!-- 2021: dieselbe Zeit, zwei Zahlen — intern 8.500, öffentlich genannt 4.800 -->
+      <line x1="420" y1="96" x2="420" y2="214" stroke="#e8731c" stroke-width="1.4" stroke-dasharray="3 3" opacity="0.75"/>
+      <circle cx="420" cy="222" r="5.5" fill="#fff" stroke="#e8731c" stroke-width="2.2"/>
+      <g font-size="10.5" font-weight="700" fill="#b0500a"><text x="433" y="219">4.800</text></g>
+      <g font-size="8" fill="#5a6472">
+        <text x="433" y="231">öffentlich genannt</text>
+        <text x="433" y="241">Pressemitteilung des Bundes, 12/2021</text>
       </g>
       <polyline points="280,387 630,402 770,402" fill="none" stroke="#14304f" stroke-width="2" stroke-dasharray="2 3" opacity="0.6"/>
       <g fill="#14304f"><circle cx="280" cy="387" r="5"/><circle cx="630" cy="402" r="5"/><circle cx="770" cy="402" r="5"/></g>
@@ -155,6 +163,7 @@ import Base from '../layouts/Base.astro';
       <g font-size="9.5">
         <rect x="70" y="474" width="14" height="4" fill="#e8731c"/><text x="89" y="481" fill="#1e2430">Prognose/Annahme der Planung</text>
         <circle cx="285" cy="476" r="4" fill="#14304f"/><text x="295" y="480" fill="#1e2430">Messung/Zahl der Stadt</text>
+        <circle cx="440" cy="476" r="4.5" fill="#fff" stroke="#e8731c" stroke-width="2"/><text x="451" y="480" fill="#1e2430">öffentlich genannte Zahl</text>
       </g>
     </svg>
     <figcaption>
@@ -162,10 +171,11 @@ import Base from '../layouts/Base.astro';
       Vorplanung 2025 übernimmt den Wert. Alle Messungen und die Zahl der Stadt für den Branderweg
       (1.000 am Tag, 2019) liegen bei 650 bis 1.000. Die Förderschwelle von 2.000 wird in keiner Messung
       erreicht. Eigene Darstellung.<br>
-      Die Zahl 8.500 für Tennenlohe kennen wir erst aus der Akteneinsicht. Öffentlich war bis dahin nur von
-      „bis zu 4.800“ Radfahrten die Rede (Pressemitteilung des Bundes, 02.12.2021); das ist die Untergrenze des
-      Nürnberger Abschnitts Buch–Nordring (Nutzen-Kosten-Analyse, S. 10). Die öffentliche Beschlussvorlage
-      613/335/2025 nennt keine Prognosezahl.<br>
+      Der hohle orange Punkt bei 2021 zeigt, was damals öffentlich genannt wurde: „bis zu 4.800“ Radfahrten
+      (Pressemitteilung des Bundes, 02.12.2021). Das ist die Untergrenze des Nürnberger Abschnitts
+      Buch–Nordring (Nutzen-Kosten-Analyse, S. 10). Dieselbe Analyse nennt für Tennenlohe 8.500 bis 8.700 —
+      diese Zahl kennen wir erst aus der Akteneinsicht, die öffentliche Beschlussvorlage 613/335/2025 nennt
+      keine Prognosezahl. Die gestrichelte Senkrechte verbindet beide Zahlen aus demselben Jahr.<br>
       <small>*Bürgerzählung: hochgerechnet aus sieben Zählungen von je zwei Stunden an Tagen mit bestem
       Radwetter höchstens rund 1.000 am Tag. Übers Jahr liegt der Wert niedriger, etwa auf dem Niveau der
       amtlichen Zählstelle (rund 650). Der volle Punkt zeigt das Jahresmittel, der hohle den Schönwetterwert.</small>
