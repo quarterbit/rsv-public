@@ -57,14 +57,20 @@ import Base from '../layouts/Base.astro';
     Download bereitgestellt und dafür eine Gebühr von 5&nbsp;€ pro Dokument berechnet, zusammen
     <strong>135&nbsp;€</strong>. Die Kosten trägt die Bürgerinitiative.
   </p>
-
-  <h2>Welche Unterlagen wir ausgewertet haben</h2>
   <p>
     Bereitgestellt wurden 24 PDF-Dokumente mit zusammen <strong>979 Seiten</strong> sowie drei Tabellen
     mit Zähldaten. Alle Unterlagen sind erfasst und durchsuchbar aufbereitet; die Auswertung ist abgeschlossen.
-    Die Dokumente sind urheberrechtlich geschützt. Wir stellen sie deshalb nicht online, sondern
-    zitieren später daraus nur in kurzen, belegten Auszügen.
+    Die Dokumente (<a href="#dokumentliste" class="dok-oeffnen">hier die ganze Liste</a>) sind
+    urheberrechtlich geschützt. Wir stellen sie deshalb nicht online, sondern zitieren später daraus
+    nur in kurzen, belegten Auszügen.
   </p>
+
+  <dialog id="dokumentliste" class="dok-dialog" aria-labelledby="dokumentliste-titel">
+    <div class="dok-kopf">
+      <h2 id="dokumentliste-titel">Welche Unterlagen wir ausgewertet haben</h2>
+      <button type="button" class="dok-schliessen" aria-label="Liste schließen">✕</button>
+    </div>
+    <div class="dok-inhalt">
   <table class="dokindex">
     <tr><th>Unterlage</th><th>Verfasser, Auftraggeber</th><th>Stand</th><th>Seiten</th></tr>
     <tr class="gruppe"><td colspan="4">Machbarkeitsstudie und Förderantrag</td></tr>
@@ -93,11 +99,31 @@ import Base from '../layouts/Base.astro';
     <tr><td>Verkehrsstärken an der Zählstelle 906, zwei Blätter</td><td>Stadt Erlangen</td><td>2018</td><td>2</td></tr>
     <tr><td>Zähldaten als Tabellen: Reutleser Weg, Wetterkreuz/Sebastianstraße, Geh- und Radweg neben der B4</td><td>Stadt Erlangen</td><td>2024 und 2025</td><td>3 Dateien</td></tr>
   </table>
+    </div>
+  </dialog>
   <style>
     .dokindex td, .dokindex th { font-size: 0.88rem; vertical-align: top; }
     .dokindex tr.gruppe td { background: var(--blau-hell); color: var(--blau); font-weight: 700; }
     .dokindex td:last-child, .dokindex th:last-child { white-space: nowrap; }
+    .dok-dialog { width: min(60rem, calc(100vw - 2rem)); max-height: 85vh; padding: 0; border: 1px solid var(--rand); border-radius: var(--radius); background: var(--sand); color: var(--text); }
+    .dok-dialog::backdrop { background: rgba(13, 33, 56, 0.55); }
+    .dok-kopf { position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.6rem 1rem; background: var(--blau); color: var(--text-invers); }
+    .dok-kopf h2 { margin: 0; font-size: 1.1rem; color: inherit; }
+    .dok-schliessen { flex: none; background: none; border: 0; color: inherit; font-size: 1.3rem; line-height: 1; padding: 0.3rem 0.5rem; cursor: pointer; }
+    .dok-inhalt { padding: 0 1rem 1rem; overflow-x: auto; }
   </style>
+  <script>
+    const dialog = document.getElementById('dokumentliste') as HTMLDialogElement | null;
+    if (dialog) {
+      document.querySelectorAll('.dok-oeffnen').forEach((link) => {
+        link.addEventListener('click', (e) => { e.preventDefault(); dialog.showModal(); });
+      });
+      dialog.querySelector('.dok-schliessen')?.addEventListener('click', () => dialog.close());
+      // Klick auf den abgedunkelten Hintergrund schließt die Liste
+      dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+      if (location.hash === '#dokumentliste') dialog.showModal();
+    }
+  </script>
 
   <h2 id="zeitstrahl">Prognose und Messungen im zeitlichen Verlauf</h2>
   <p>
@@ -238,6 +264,51 @@ import Base from '../layouts/Base.astro';
     .zeitstrahl .real .tag { background: var(--blau); }
     .zeitstrahl .einsch { color: #5a6472; font-style: italic; }
     .zs-foot { font-size: 0.82rem; color: #5a6472; }
+  </style>
+
+  <h2 id="kosten">Kosten für Bau und Betrieb in den Unterlagen</h2>
+  <p>
+    Die Unterlagen enthalten Kostenangaben aus vier Planungsständen. Sie beziehen sich auf
+    unterschiedliche Streckenteile und Kostenarten und sind teils netto, teils brutto angegeben.
+    Wir stellen sie deshalb nebeneinander und addieren sie nicht.
+  </p>
+  <table class="kostentab">
+    <tr><th>Stand</th><th>Was enthalten ist</th><th>Betrag</th></tr>
+    <tr><td>Machbarkeitsstudie, August 2017 (S. 147)</td><td>Gesamte Trasse Nürnberg–Erlangen, brutto mit Grunderwerb, Planung, Ausgleich und Mehrwertsteuer; davon Ingenieurbauwerke 2,3&nbsp;Mio.&nbsp;€</td><td>23,8&nbsp;Mio.&nbsp;€</td></tr>
+    <tr class="unter"><td>dto., Abschnitt Tennenlohe (S. 155)</td><td>Reutleser Straße bis Sebastianstraße, brutto</td><td>2,0&nbsp;Mio.&nbsp;€</td></tr>
+    <tr><td>Nutzen-Kosten-Analyse, 23.03.2021 (S. 15)</td><td>Gesamtkorridor: Planung 9,7 · Grunderwerb 7,8 · Fahrweg 12,5 · Ingenieurbauwerke 6,7&nbsp;Mio.&nbsp;€</td><td>36,7&nbsp;Mio.&nbsp;€</td></tr>
+    <tr><td>Nutzen-Kosten-Analyse, 30.04.2021 (S. 15)</td><td>Gesamtkorridor: Planung 4,5 · Grunderwerb 0,8 · Fahrweg 21,4 · Ingenieurbauwerke 2,5&nbsp;Mio.&nbsp;€; Kostenbasis ist die Machbarkeitsstudie 2017, nach Baupreisindex angepasst (S. 14)</td><td>29,2&nbsp;Mio.&nbsp;€</td></tr>
+    <tr><td>Vorplanung, 14.02.2025 (S. 56)</td><td>Nur Erlanger Teil, nur Verkehrsanlagen (Wege und Knotenpunkte), netto, ohne Bauwerke</td><td>6,8–7,8&nbsp;Mio.&nbsp;€</td></tr>
+    <tr class="unter"><td>dto., Kostenschätzung</td><td>Abschnitt 2 Wetterkreuz – An der Wied (Tennenlohe), Verkehrsanlagen, netto, je nach Führungsform</td><td>1,47–1,55&nbsp;Mio.&nbsp;€</td></tr>
+    <tr><td>Vorplanung, 14.02.2025 (S. 95)</td><td>Querung der Südkreuzung allein, drei Bauwerksvarianten (zwei Brücken, ein Tunnel), netto</td><td>16,6–19,7&nbsp;Mio.&nbsp;€</td></tr>
+  </table>
+  <ul class="kosten-punkte">
+    <li>Die Nutzen-Kosten-Analyse vom April 2021 setzt für alle Ingenieurbauwerke des Korridors 2,5&nbsp;Mio.&nbsp;€ an.
+      Die Vorplanung 2025 schätzt die Querung der Südkreuzung allein auf 16,6 bis 19,7&nbsp;Mio.&nbsp;€ netto.</li>
+    <li>Ohne Betrag in den Unterlagen: der Ersatzneubau des Hutgraben-Durchlasses am Branderweg (Vorplanung, S. 85),
+      die übrigen Ingenieurbauwerke (laut Vorplanung in einem eigenen Bericht, der uns nicht vorliegt), der Grunderwerb
+      im Erlanger Teil, die weiteren Planungsstufen und der Nürnberger Teil nach 2021.</li>
+    <li>Das Kapitel „Wirtschaftlichkeitsbetrachtung" der Vorplanung soll ergänzt werden, „sobald die aktualisierten
+      Kosten seitens der Stadt Nürnberg vorliegen (vsl. Q2 2025)" (Vorplanung, S. 58). Eine Nutzen-Kosten-Rechnung
+      für die 2025 vorgeschlagene Trasse liegt uns nicht vor.</li>
+  </ul>
+  <div class="hinweis">
+    <strong>Laufende Kosten.</strong> Die Nutzen-Kosten-Analyse setzt für Beleuchtung, Winterdienst und
+    Instandhaltung 2,5&nbsp;% der Baukosten pro Jahr an: <strong>618.000&nbsp;€ pro Jahr</strong> (Fassung April 2021,
+    auf 24,7&nbsp;Mio.&nbsp;€ Baukosten; Fassung März 2021: 674.000&nbsp;€, jeweils S. 12). Über die dort angesetzte
+    Nutzungsdauer des Fahrwegs von 25 Jahren sind das rund 15,5&nbsp;Mio.&nbsp;€ (eigene Rechnung, ohne Preissteigerung).
+    Voraussetzung der Bundesförderung ist, dass die Träger der Straßenbaulast den Radschnellweg „dauerhaft und
+    verkehrssicher – einschließlich Winterdienst –" betreiben und unterhalten (Verwaltungsvereinbarung
+    Radschnellwege, Art. 3 Abs. 3 g). Gefördert werden nach Art. 3 Abs. 2 Planung und Bau; Betrieb und
+    Unterhalt bleiben bei den Trägern der Straßenbaulast.
+  </div>
+  <style>
+    .kostentab td, .kostentab th { font-size: 0.88rem; vertical-align: top; }
+    .kostentab td:first-child { width: 28%; }
+    .kostentab td:last-child, .kostentab th:last-child { white-space: nowrap; text-align: right; font-weight: 700; }
+    .kostentab tr.unter td { color: #5a6472; }
+    .kostentab tr.unter td:first-child { padding-left: 1.4rem; }
+    .kosten-punkte li { font-size: 0.95rem; margin-bottom: 0.3rem; }
   </style>
 
   <h2>Beobachtungen beim Termin am 23. September</h2>
