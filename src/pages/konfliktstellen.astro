@@ -34,8 +34,8 @@ const konfliktstellen = [
     zeit: 'Abends und nachts am höchsten', kritisch: false,
   },
   {
-    nr: 'K7', titel: 'Bushaltestelle „Tennenlohe Kirche"', tag: 'ÖPNV & Fußverkehr',
-    text: 'Fahrgäste queren zu jeder Tages- und Nachtzeit die Trasse — auf dem Weg zwischen Haltestelle und Ortskern, direkt neben Kirche und Gaststätten.',
+    nr: 'K7', titel: 'Weg zur Bushaltestelle „Tennenlohe Kirche"', tag: 'ÖPNV & Fußverkehr',
+    text: 'Wer aus dem Ort zu Fuß oder mit dem Rad zur Haltestelle „Tennenlohe Kirche" will, quert den Branderweg am Knoten „Im Gäßla" — genau dort, wo der Radschnellweg laut Vorplanung bevorrechtigt werden soll. Fahrgäste queren zu jeder Tages- und Nachtzeit, im Winter morgens und abends im Dunkeln.',
     zeit: 'Ganztägig, besonders zu Pendlerzeiten und spätabends', kritisch: true,
   },
   {
@@ -95,9 +95,11 @@ const konfliktstellen = [
     Entlang der geplanten Trasse münden nach unserer Video-Dokumentation <strong>36 private
     Ein- und Ausfahrten</strong> (Garagen, Höfe, Stellplätze, Gewerbe) direkt auf den künftigen
     „Radschnellweg“ — verteilt auf Leitensteig, Branderweg und Sebastianstraße, dazu
-    <strong>8 Straßenquerungen</strong>. Jede einzelne ist
-    eine potenzielle Konfliktstelle zwischen ausparkenden Fahrzeugen und bevorrechtigtem Radverkehr
-    mit 20–30&nbsp;km/h, häufig durch baulich eingeschränkte Sicht.
+    <strong>8 Straßenquerungen</strong>. Sie wiegen unterschiedlich schwer: Eine Garagenausfahrt
+    hinter einer Hecke ist etwas anderes als eine übersichtliche Hofeinfahrt. Gemeinsam ist ihnen,
+    dass ausparkende Fahrzeuge auf bevorrechtigten Radverkehr mit 20–30&nbsp;km/h treffen. Die Zufahrten
+    sind für eine Wohnstraße angelegt: Wer rückwärts ausparkt, sieht spät; wer vorwärts ausfährt, steht
+    mit der Front in der Trasse, bevor er zur Seite sehen kann.
   </p>
 
   <h2>Zum Vergleich: Was das Regelwerk verlangt</h2>
@@ -112,22 +114,23 @@ const konfliktstellen = [
   <h2>Die Ortsdurchfahrt in Zahlen</h2>
   <div class="statband">
     <Stat zahl="1,1 km" label="Länge der Ortsdurchfahrt Tennenlohe" fussnote="gemessen an der OpenStreetMap-Straßengeometrie" />
-    <Stat zahl="6,4 %" label="Anteil an der 17,5-km-Gesamttrasse — das FGSV-Ausnahme-Budget liegt bei rund 10 %" signal={true} />
-    <Stat zahl="alle 31 m" label="im Schnitt eine Ausfahrt oder Querung (44 auf 1,1 km)" />
-    <Stat zahl="~34 s" label="zulässige Verlustzeit für die gesamte Ortsdurchfahrt (30 s/km innerorts)" fussnote="BASt V320 / H-RSV 2021" />
+    <Stat zahl="36 + 8" label="Ausfahrten und Querungen, unterschiedlich schwer — keine davon in der Vorplanung einzeln bewertet" signal={true} />
+    <Stat zahl="4,00 m" label="Branderweg: gezielt verschmälert, um die Radgeschwindigkeit zu senken" fussnote="Vorplanung 14.02.2025, S. 86–87" />
+    <Stat zahl="2,55 m" label="Engstelle Sebastianstraße / An der Wied — Regelbreite 4,0 m" fussnote="Beschlussvorlage 613/335/2025, S. 3" />
   </div>
   <p>
-    Die geplante Führung durch den Tennenloher Ortskern ist rund <strong>1,1 Kilometer</strong> lang —
-    <strong>6,4&nbsp;%</strong> der Gesamttrasse. Die Fördervorgaben erlauben Abweichungen vom
-    Radschnellweg-Standard nur auf kurzen Streckenanteilen (FGSV-Richtwert: rund 10&nbsp;% der
-    Gesamtstrecke) — <strong>Tennenlohe allein verbraucht davon fast zwei Drittel</strong>, bevor
-    Waldabschnitte, Engstellen und die übrigen Ortslagen überhaupt angerechnet sind. Und das mit einer
-    Strecke, die durchgehend aus Konfliktstellen besteht: im Schnitt alle 31 Meter eine Ausfahrt oder
-    Querung. Das zulässige Verlustzeiten-Budget von rund 34 Sekunden für diesen Abschnitt ist mit
-    Schule, Kirche, Spielplatz, zwei Gaststätten, Bushaltestelle und Kfz-Betrieb an der Strecke nicht
-    einzuhalten. <strong>Alle unsere Analysen — unter Zuhilfenahme des Regelwerks — zeigen: Der
-    Ortskern von Tennenlohe kann den RSV-Standard nicht erreichen.</strong> Wird er dennoch
-    erzwungen, drohen die Folgen, die
+    Die geplante Führung durch den Tennenloher Ortskern ist rund <strong>1,1 Kilometer</strong> lang.
+    Bei der Breite wird der Standard nach den Unterlagen der Stadt in der Sebastianstraße unterschritten:
+    3,0&nbsp;m statt 4,0&nbsp;m vom Branderweg bis zum Heuweg, an der Kreuzung An der Wied nur
+    2,55&nbsp;m (Beschlussvorlage 613/335/2025, S. 3). Zum Radschnellweg-Standard gehören aber nicht
+    nur Breiten, sondern auch <strong>Knotenpunkte ohne nennenswerte Wartezeiten</strong> und die
+    <strong>Trennung vom Fußverkehr</strong> (Verwaltungsvereinbarung, Art. 3). Beides ist auf der
+    Ortsdurchfahrt nicht durchgehend gegeben: eine Ampel am Wetterkreuz, Signalisierung oder
+    Einbahnstraße im Leitensteig, kein Gehweg auf der Ostseite des Branderwegs, Fußverkehr über die
+    StUB-Haltestelle in der Sebastianstraße. Und die Planung verschmälert den Branderweg ausdrücklich
+    „zur Senkung der Geschwindigkeit der Radfahrenden“ (Vorplanung, S. 86–87).
+    <strong>Aus unserer Sicht kann der Ortskern von Tennenlohe den RSV-Standard nicht
+    erreichen.</strong> Wird er dennoch erzwungen, drohen die Folgen, die
     <a href="/vergleichsfaelle#oberhaching">Oberhaching seit Jahren vorführt</a>.
   </p>
   <p>
